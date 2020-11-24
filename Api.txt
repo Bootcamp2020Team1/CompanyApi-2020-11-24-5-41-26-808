@@ -77,7 +77,7 @@ Post /Companies/{companyID}/{Employees}
 Response1:201
 Header: "Location": /Companies/{companyID}/{Employees}/{employeeID}
 {
-  '{employeeID}':"",
+  'employeeID':"",
   'name':"",
   'salary':""
 }
@@ -112,9 +112,9 @@ Request Body:
 }
 Response1:200
 {
-'employeeID':"",
-'name':"",
-'salary':""
+  'employeeID':"",
+  'name':"",
+  'salary':""
 }
 
 Response2:404
