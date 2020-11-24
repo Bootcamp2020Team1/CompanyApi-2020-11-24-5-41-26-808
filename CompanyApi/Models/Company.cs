@@ -19,8 +19,8 @@ namespace CompanyApi.Models
 
         public string Id { get; set; }
         public string Name { get; set; }
-
-        public override bool Equals(object obj)
+        public IList<Employee> Employees { get; set; } = new List<Employee>();
+        public override bool Equals(object? obj)
         {
             if (obj == null || !(obj is Company))
             {

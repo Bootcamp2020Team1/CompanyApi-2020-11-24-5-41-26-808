@@ -22,7 +22,7 @@ namespace CompanyApi.Models
         public string Name { get; set; }
         public double Salary { get; set; }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null || !(obj is Employee))
             {
@@ -30,7 +30,7 @@ namespace CompanyApi.Models
             }
 
             Employee employee = (Employee)obj;
-            return employee.Name == Name && employee.Salary == Salary && employee.Id == Id;
+            return employee.Name == Name && employee.Salary == Salary;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace CompanyApi.Controllers
         private static readonly IList<Company> companies = new List<Company>();
         
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Company>>> Query(int? pageSize, int? pageIndex)
+        public async Task<ActionResult<IEnumerable<Company>>> QueryCompany(int? pageSize, int? pageIndex)
         {
             return Ok(companies.Where(c =>
                 (pageSize == null || (pageIndex == null || 
@@ -25,7 +25,7 @@ namespace CompanyApi.Controllers
         }
 
         [HttpGet("{name}")]
-        public async Task<ActionResult<Company>> GetByName(string name)
+        public async Task<ActionResult<Company>> GetCompanyByName(string name)
         {
             return Ok(companies.Where(c => c.Name == name).FirstOrDefault());
         }
@@ -39,11 +39,20 @@ namespace CompanyApi.Controllers
         }
 
         [HttpPatch("{name}")]
-        public async Task<ActionResult<Company>> UpdatePet(string name, CompanyUpdateModel companyUpdateModel)
+        public async Task<ActionResult<Company>> UpdateCompany(string name, CompanyUpdateModel companyUpdateModel)
         {
             var company = companies.Where(c => c.Name == name).FirstOrDefault();
             company.Name = companyUpdateModel.Name;
             return Ok(company);
+        }
+
+        [HttpPost("{companyName}/employees")]
+        public async Task<ActionResult<Employee>> AddEmployee(string companyName, EmployeeUpdateModel employeeUpdateModel)
+        {
+            var company = companies.FirstOrDefault(c => c.Name == companyName);
+            var employee = new Employee(employeeUpdateModel.Name, employeeUpdateModel.Salary);
+            company.Employees.Add(employee);
+            return Ok(employee);
         }
 
         [HttpDelete("Clear")]

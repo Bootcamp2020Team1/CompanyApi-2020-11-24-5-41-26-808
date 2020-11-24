@@ -145,5 +145,26 @@ namespace CompanyApiTest.Controllers
             Assert.Equal(new Company(name: "Banana"), actualCompany);
             Assert.Equal(expectedCompany.Id, actualCompany.Id);
         }
+
+        [Fact]
+        public async Task Should_add_new_employee_to_specific_company()
+        {
+            // given
+            CompanyUpdateModel companyUpdateModel = new CompanyUpdateModel(name: "Apple");
+            string request = JsonConvert.SerializeObject(companyUpdateModel);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            await client.PostAsync("companies", requestBody);
+            // when
+            EmployeeUpdateModel employeeUpdateModel = new EmployeeUpdateModel(name: "Steve", salary: 100);
+            string request2 = JsonConvert.SerializeObject(employeeUpdateModel);
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync("companies/Apple/employees", requestBody2);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Employee actualEmployee = JsonConvert.DeserializeObject<Employee>(responseString);
+
+            // then
+            Assert.Equal(new Employee(name: "Steve", salary: 100), actualEmployee);
+        }
     }
 }
