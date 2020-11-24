@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
 
+using System.Collections.Generic;
+
 namespace CompanyApiTest.Controllers
 {
     public class CompaniesControllerTest
@@ -26,17 +28,30 @@ namespace CompanyApiTest.Controllers
         [Fact]
         public async Task Should_return_added_company_when_add_company_successful()
         {
-            // when
             var company = new Company("1", "Sun");
-            var request = JsonConvert.SerializeObject(company);
+            string request = JsonConvert.SerializeObject(company);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+
+            //when
             var response = await client.PostAsync("/Companies", requestBody);
+
+            //then
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
-
-            // then
             Company actual = JsonConvert.DeserializeObject<Company>(responseString);
             Assert.Equal(company, actual);
+            //// when
+            //await client.DeleteAsync("/Companies/clear");
+            //var company = new Company("1", "Sun");
+            //var request = JsonConvert.SerializeObject(company);
+            //StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            //var response = await client.PostAsync("/Companies", requestBody);
+            //response.EnsureSuccessStatusCode();
+            //var responseString = await response.Content.ReadAsStringAsync();
+
+            //// then
+            //Company actual = JsonConvert.DeserializeObject<Company>(responseString);
+            //Assert.Equal(company, actual);
         }
     }
 }

@@ -13,6 +13,13 @@ namespace CompanyApi.Controllers
     public class CompaniesController : ControllerBase
     {
         private static List<Company> companies = new List<Company>();
+
+        [HttpDelete("clear")]
+        public void DeletePet()
+        {
+            companies.Clear();
+        }
+
         [HttpGet]
         public string Get()
         {

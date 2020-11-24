@@ -7,24 +7,25 @@ namespace CompanyApi.Models
 {
     public class Company
     {
-        private List<Employee> employees = new List<Employee>();
-        private string id;
-        private string name;
-        public Company() 
-        { 
+        //private List<Employee> employees = new List<Employee>();
+
+        public Company()
+        {
         }
 
         public Company(string id, string name)
         {
             //this.id = Guid.NewGuid().ToString();
-            this.id = id;
-            this.name = name;
+            this.Id = id;
+            this.Name = name;
         }
 
+        public string Id { get; set; }
+        public string Name { get; set; }
         public override bool Equals(object obj)
         {
             Company other = (Company)obj;
-            return name == other.name && id == other.id;
+            return Name == other.Name && Id == other.Id;
         }
     }
 }
