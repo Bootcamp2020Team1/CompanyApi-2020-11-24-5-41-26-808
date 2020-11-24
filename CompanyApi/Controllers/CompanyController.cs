@@ -78,5 +78,12 @@ namespace CompanyApi.Controllers
         {
             companies.Clear();
         }
+
+        [HttpDelete("{companyId}/employees/{employeeId}")]
+        public void DeleteEmployee(int companyId, int employeeId)
+        {
+            GetEmployeesByCompanyId(companyId).Remove(GetEmployeesByCompanyId(companyId)
+                .FirstOrDefault(employee => employee.EmployeeID == employeeId));
+        }
     }
 }

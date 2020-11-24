@@ -181,5 +181,33 @@ namespace CompanyApiTest.Controllers
             // then
             Assert.Equal(5000, actualEmployee.Salary);
         }
+
+        [Fact]
+        public async Task Should_Remove_Employee_When_Delete_By_Employee_Id()
+        {
+            // given
+            Company company = new Company("testCompany");
+            string request = JsonConvert.SerializeObject(company);
+            var employee1 = new Employee("employeename1", 10000);
+            var employee2 = new Employee("employeename2", 20000);
+            string postRequest1 = JsonConvert.SerializeObject(employee1);
+            string postRequest2 = JsonConvert.SerializeObject(employee2);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            StringContent postRequestBody1 = new StringContent(postRequest1, Encoding.UTF8, "application/json");
+            StringContent postRequestBody2 = new StringContent(postRequest2, Encoding.UTF8, "application/json");
+
+            // when
+            await client.PostAsync("company", requestBody);
+            await client.PostAsync("company/1", postRequestBody1);
+            await client.PostAsync("company/1", postRequestBody2);
+            await client.DeleteAsync("company/1/employees/2");
+            var getResponse = await client.GetAsync("company/1/employees");
+            getResponse.EnsureSuccessStatusCode();
+            var responseString = await getResponse.Content.ReadAsStringAsync();
+            List<Employee> actualEmployees = JsonConvert.DeserializeObject<List<Employee>>(responseString);
+
+            // then
+            Assert.Single(actualEmployees);
+        }
     }
 }
