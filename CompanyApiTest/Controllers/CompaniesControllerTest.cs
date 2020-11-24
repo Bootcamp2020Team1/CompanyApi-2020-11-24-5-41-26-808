@@ -90,5 +90,35 @@ namespace CompanyApiTest.Controllers
             Company actual = JsonConvert.DeserializeObject<Company>(responseString);
             Assert.Equal(company1, actual);
         }
+
+        [Fact]
+        public async Task Should_return_updated_company_when_update_company_with_certain_id()
+        {
+            await client.DeleteAsync("Companies/clear");
+            var company1 = new Company("Sun");
+            var company2 = new Company("Moon");
+            var updateCompany = new UpdateCompany("star");
+            string request1 = JsonConvert.SerializeObject(company1);
+            string request2 = JsonConvert.SerializeObject(company2);
+            string updateRequest = JsonConvert.SerializeObject(updateCompany);
+            StringContent requestBody1 = new StringContent(request1, Encoding.UTF8, "application/json");
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+            StringContent updateRequestBody = new StringContent(updateRequest, Encoding.UTF8, "application/json");
+
+            //when
+            var responseWithId = await client.PostAsync("/Companies", requestBody1);
+            await client.PostAsync("/Companies", requestBody2);
+            responseWithId.EnsureSuccessStatusCode();
+            var responseStringWithId = await responseWithId.Content.ReadAsStringAsync();
+            Company actualWithId = JsonConvert.DeserializeObject<Company>(responseStringWithId);
+            var id = actualWithId.Id;
+            var response = await client.PatchAsync($"/Companies/{id}", updateRequestBody);
+            //then
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Company actual = JsonConvert.DeserializeObject<Company>(responseString);
+            company1.Name = "star";
+            Assert.Equal(company1, actual);
+        }
     }
 }

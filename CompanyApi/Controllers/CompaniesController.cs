@@ -32,6 +32,14 @@ namespace CompanyApi.Controllers
             return companies.First(company => company.Id == id);
         }
 
+        [HttpPatch("{id}")]
+        public Company UpdateCompanById(string id, UpdateCompany updateCompany)
+        {
+            var neetToUpdate = companies.First(company => company.Id == id);
+            neetToUpdate.Name = updateCompany.Name;
+            return neetToUpdate;
+        }
+
         [HttpPost]
         public Company AddCompany(Company newCompany)
         {
