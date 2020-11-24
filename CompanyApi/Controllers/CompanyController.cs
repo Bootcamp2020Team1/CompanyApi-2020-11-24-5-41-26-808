@@ -24,10 +24,10 @@ namespace CompanyApi.Controllers
                 companies.IndexOf(c) < pageSize * pageIndex)))));
         }
 
-        [HttpGet("{name}")]
-        public async Task<ActionResult<Company>> GetCompanyByName(string name)
+        [HttpGet("{companyName}")]
+        public async Task<ActionResult<Company>> GetCompanyByName(string companyName)
         {
-            return Ok(companies.Where(c => c.Name == name).FirstOrDefault());
+            return Ok(companies.Where(c => c.Name == companyName).FirstOrDefault());
         }
 
         [HttpPost]
@@ -38,23 +38,23 @@ namespace CompanyApi.Controllers
             return Ok(company);
         }
 
-        [HttpPatch("{name}")]
-        public async Task<ActionResult<Company>> UpdateCompany(string name, CompanyUpdateModel companyUpdateModel)
+        [HttpPatch("{companyName}")]
+        public async Task<ActionResult<Company>> UpdateCompany(string companyName, CompanyUpdateModel companyUpdateModel)
         {
-            var company = companies.Where(c => c.Name == name).FirstOrDefault();
+            var company = companies.Where(c => c.Name == companyName).FirstOrDefault();
             company.Name = companyUpdateModel.Name;
             return Ok(company);
         }
 
-        [HttpDelete("{name}")]
-        public async Task<ActionResult<Company>> DeleteCompany(string name)
+        [HttpDelete("{companyName}")]
+        public async Task<ActionResult<Company>> DeleteCompany(string companyName)
         {
-            companies.Remove(companies.Where(c => c.Name == name).FirstOrDefault());
+            companies.Remove(companies.Where(c => c.Name == companyName).FirstOrDefault());
             return NoContent();
         }
 
         [HttpGet("{companyName}/employees")]
-        public async Task<ActionResult<Employee>> GetAllEmployees(string companyName)
+        public async Task<ActionResult<IEnumerable<Employee>>> GetAllEmployees(string companyName)
         {
             var company = companies.FirstOrDefault(c => c.Name == companyName);
             if (company == null)
