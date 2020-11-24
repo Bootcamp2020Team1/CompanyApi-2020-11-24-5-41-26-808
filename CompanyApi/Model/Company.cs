@@ -21,6 +21,8 @@ namespace CompanyApi.Model
 
         public string Name { get; set; }
 
+        public List<Employee> Employees { get; set; }
+
         public bool Equals(Company company)
         {
             if (company == null)

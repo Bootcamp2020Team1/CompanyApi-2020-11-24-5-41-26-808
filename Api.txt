@@ -5,10 +5,179 @@ Request Body:
 {
 'name':""
 }
-Response Code:203
+Response Code:201
 Response Body:
 Header: "Location": /Companies/{companyID}
 {
 'companyID':""
 'name':""
 }
+
+
+HTTP Method: Post
+URI:/Companies
+Request Body:
+{
+'name':""
+}
+Response Code:409
+Response Body:
+
+AC2
+HTTP Method: Get
+URI:/Companies
+Request Body:
+Response Code:200
+Response Body:
+[{
+'companyID':""
+'name':""
+}...]
+
+AC3
+HTTP Method: Get
+URI:/Companies/{companyID}
+Request Body:
+Response Code:200
+Response Body:
+{
+'companyID':""
+'name':""
+}
+
+HTTP Method: Get
+URI:/Companies/{companyID}
+Request Body:
+Response Code:404
+Response Body:
+
+
+AC4
+HTTP Method: Get
+URI:/Companies?pageSize={pageSize=}&pageIndex={pageIndex}
+Request Body:
+Response Code:200
+Response Body:
+[{'companyID':"", 'name':""}...]
+
+AC5
+HTTP Method: Patch
+URI:/Companies/{companyID}
+Request Body:
+{
+'name':""
+}
+Response Code:200
+Response Body:
+{
+'companyID':""
+'name':""
+}
+
+
+HTTP Method: Patch
+URI:/Companies/{companyID}
+Request Body:
+{
+'name':""
+}
+Response Code:404
+Response Body:
+
+
+
+AC6
+HTTP Method: Post
+URI:/Companies/{companyID}/{Employees}
+Request Body:
+{
+'name':"",
+'salary':""
+}
+Response Code:201
+Response Body:
+Header: "Location": /Companies/{companyID}/{Employees}/{employeeID}
+
+
+HTTP Method: Post
+URI:/Companies/{companyID}/{Employees}
+Request Body:
+{
+'name':"",
+'salary':""
+}
+Response Code:404
+Response Body:
+
+AC7
+HTTP Method: Get
+URI:/Companies/{companyID}/{Employees}
+Request Body:
+Response Code:200
+Response Body:
+[{
+'employeeID':"",
+'name':"",
+'salary':""
+}...]
+
+
+HTTP Method: Get
+URI:/Companies/{companyID}/{Employees}
+Request Body:
+Response Code:404
+Response Body:
+
+AC8
+HTTP Method: Patch
+URI:/Companies/{companyID}/{Employees}/{employeeID}
+Request Body:
+{
+'name':"",
+'salary':""
+}
+Response Code:200
+Response Body:
+{
+'employeeID':"",
+'name':"",
+'salary':""
+}
+
+HTTP Method: Patch
+URI:/Companies/{companyID}/{Employees}/{employeeID}
+Request Body:
+{
+'name':"",
+'salary':""
+}
+Response Code:404
+Response Body:
+
+
+AC9
+HTTP Method: Delete
+URI:/Companies/{companyID}/{Employees}/{employeeID}
+Request Body:
+Response Code:204
+Response Body:
+
+HTTP Method: Delete
+URI:/Companies/{companyID}/{Employees}/{employeeID}
+Request Body:
+Response Code:404
+Response Body:
+
+AC10
+HTTP Method: Delete
+URI:/Companies/{companyID}
+Request Body:
+Response Code:204
+Response Body:
+
+HTTP Method: Delete
+URI:/Companies/{companyID}
+Request Body:
+Response Code:404
+Response Body:
+
