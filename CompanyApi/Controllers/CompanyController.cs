@@ -58,6 +58,26 @@ namespace CompanyApi.Controllers
             return Ok(company.Employees);
         }
 
+        [HttpPatch("{companyName}/employees/{employeeName}")]
+        public async Task<ActionResult<Employee>> UpdateEmployee(string companyName, string employeeName, EmployeeUpdateModel employeeUpdateModel)
+        {
+            var company = companies.FirstOrDefault(c => c.Name == companyName);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            var employee = company.Employees.FirstOrDefault(employee => employee.Name == employeeName);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            employee.Name = employeeUpdateModel.Name;
+            employee.Salary = employeeUpdateModel.Salary;
+            return Ok(employee);
+        }
+
         [HttpPost("{companyName}/employees")]
         public async Task<ActionResult<Employee>> AddEmployee(string companyName, EmployeeUpdateModel employeeUpdateModel)
         {

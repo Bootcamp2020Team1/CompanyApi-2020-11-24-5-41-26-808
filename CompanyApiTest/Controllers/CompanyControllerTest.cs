@@ -190,5 +190,32 @@ namespace CompanyApiTest.Controllers
             // then
             Assert.Equal(new List<Employee> { new Employee(name: "Steve", salary: 100) }, actualEmployees);
         }
+
+        [Fact]
+        public async Task Should_change_employee_information()
+        {
+            // given
+            CompanyUpdateModel companyUpdateModel = new CompanyUpdateModel(name: "Apple");
+            string request = JsonConvert.SerializeObject(companyUpdateModel);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            await client.PostAsync("companies", requestBody);
+
+            EmployeeUpdateModel employeeUpdateModel = new EmployeeUpdateModel(name: "Steve", salary: 100);
+            string request2 = JsonConvert.SerializeObject(employeeUpdateModel);
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+            await client.PostAsync("companies/Apple/employees", requestBody2);
+
+            // when
+            EmployeeUpdateModel employeeUpdateModel3 = new EmployeeUpdateModel(name: "Jobs", salary: 200);
+            string request3 = JsonConvert.SerializeObject(employeeUpdateModel3);
+            StringContent requestBody3 = new StringContent(request3, Encoding.UTF8, "application/json");
+            var response = await client.PatchAsync("companies/Apple/employees/Steve", requestBody3);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Employee actualEmployees = JsonConvert.DeserializeObject<Employee>(responseString);
+
+            // then
+            Assert.Equal(new Employee(name: "Jobs", salary: 200), actualEmployees);
+        }
     }
 }
