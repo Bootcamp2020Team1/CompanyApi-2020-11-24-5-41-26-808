@@ -51,5 +51,26 @@ namespace CompanyApi.Controllers
 
             return Ok(company.Employees);
         }
+
+        [HttpPatch("{employeeID}")]
+        public ActionResult<Company> UpdateEmployeeInformation(string companyID, string employeeID, EmployeeUpdatedModel employeeUpdatedModel)
+        {
+            var company = FakeDatabase.GetCompanyByID(companyID);
+
+            if (company == null || company.Employees == null)
+            {
+                return NotFound();
+            }
+
+            var employee = company.Employees.FirstOrDefault(employee => employee.EmployeeID == employeeID);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            employee.Name = employeeUpdatedModel.Name == null ? employee.Name : employeeUpdatedModel.Name;
+            employee.Salary = employeeUpdatedModel.Salary == null ? employee.Salary : employeeUpdatedModel.Salary.Value;
+            return Ok(employee);
+        }
     }
 }

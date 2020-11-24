@@ -286,5 +286,84 @@ namespace CompanyApiTest
             // then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
+
+        [Fact]
+        public async Task Should_Update_Employee_Information_Given_Company_ID_And_Employee_ID_When_Patch()
+        {
+            // given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = Serialize(company);
+            var postResponse = await client.PostAsync("/Companies", requestBody);
+            var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
+
+            var employee = new EmployeeUpdatedModel("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
+            var expectedEmployee = await DeserializeResponseAsync<Employee>(responsePost);
+
+            var updatedEmployee = new EmployeeUpdatedModel("employeeUpdated", 5000);
+            var requestBodyPatch = Serialize<EmployeeUpdatedModel>(updatedEmployee);
+
+            // when
+            var responsePatch = await client.PatchAsync($"/Companies/{existedCompany.CompanyID}/Employees/{expectedEmployee.EmployeeID}", requestBodyPatch);
+
+            // then
+            Assert.Equal(HttpStatusCode.OK, responsePatch.StatusCode);
+            var actualEmployee = await DeserializeResponseAsync<Employee>(responsePatch);
+            expectedEmployee.Name = updatedEmployee.Name;
+            expectedEmployee.Salary = updatedEmployee.Salary.Value;
+            Assert.Equal(expectedEmployee, actualEmployee);
+        }
+
+        [Fact]
+        public async Task Should_Return_Not_Found_Given_Not_Existed_Company_ID_When_Patch()
+        {
+            // given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = Serialize(company);
+            var postResponse = await client.PostAsync("/Companies", requestBody);
+            var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
+
+            var employee = new EmployeeUpdatedModel("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
+            var expectedEmployee = await DeserializeResponseAsync<Employee>(responsePost);
+
+            var updatedEmployee = new EmployeeUpdatedModel("employeeUpdated", 5000);
+            var requestBodyPatch = Serialize<EmployeeUpdatedModel>(updatedEmployee);
+
+            // when
+            var responsePatch = await client.PatchAsync($"/Companies/notExisted/Employees/{expectedEmployee.EmployeeID}", requestBodyPatch);
+
+            // then
+            Assert.Equal(HttpStatusCode.NotFound, responsePatch.StatusCode);
+        }
+
+        [Fact]
+        public async Task Should_Return_Not_Found_Given_Not_Existed_Employee_ID_When_Patch()
+        {
+            // given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = Serialize(company);
+            var postResponse = await client.PostAsync("/Companies", requestBody);
+            var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
+
+            var employee = new EmployeeUpdatedModel("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
+            var expectedEmployee = await DeserializeResponseAsync<Employee>(responsePost);
+
+            var updatedEmployee = new EmployeeUpdatedModel("employeeUpdated", 5000);
+            var requestBodyPatch = Serialize<EmployeeUpdatedModel>(updatedEmployee);
+
+            // when
+            var responsePatch = await client.PatchAsync($"/Companies/{existedCompany.CompanyID}/Employees/notexisted", requestBodyPatch);
+
+            // then
+            Assert.Equal(HttpStatusCode.NotFound, responsePatch.StatusCode);
+        }
     }
 }

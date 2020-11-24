@@ -19,6 +19,6 @@ namespace CompanyApi.Model
 
         public string EmployeeID { get; set; }
         public string Name { get; set; }
-        public double Salary { get; set; }
+        public double? Salary { get; set; }
     }
 }
