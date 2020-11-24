@@ -7,6 +7,7 @@ namespace CompanyApi
 {
     public class Company
     {
+        private readonly List<Employee> employees = new List<Employee>();
         public Company()
         {
         }
@@ -18,5 +19,19 @@ namespace CompanyApi
 
         public int CompanyId { get; set; }
         public string Name { get; set; }
+
+        public List<Employee> Employees
+        {
+            get
+            {
+                return employees;
+            }
+        }
+
+        public void AddEmployee(Employee employee)
+        {
+            employee.EmployeeID = employees.Count + 1;
+            employees.Add(employee);
+        }
     }
 }

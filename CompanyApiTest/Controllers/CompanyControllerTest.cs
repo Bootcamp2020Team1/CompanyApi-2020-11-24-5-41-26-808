@@ -94,14 +94,38 @@ namespace CompanyApiTest.Controllers
             StringContent patchRequestBody = new StringContent(patchRequest, Encoding.UTF8, "application/json");
 
             // when
-            var response = await client.PostAsync("company", requestBody);
-            var patchResponse = await client.PatchAsync("company/1", patchRequestBody);
+            await client.PostAsync("company", requestBody);
+            await client.PatchAsync("company/1", patchRequestBody);
             var getResponse = await client.GetAsync("company/1");
             getResponse.EnsureSuccessStatusCode();
             var responseString = await getResponse.Content.ReadAsStringAsync();
             Company actualCompany = JsonConvert.DeserializeObject<Company>(responseString);
             // then
             Assert.Equal("patchname", actualCompany.Name);
+        }
+
+        [Fact]
+        public async Task Should_Add_Employee_To_Company_When_Add_()
+        {
+            // given
+            Company company = new Company("testCompany");
+            string request = JsonConvert.SerializeObject(company);
+            var employee = new Employee("employeename", 10000);
+            string postRequest = JsonConvert.SerializeObject(employee);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            StringContent postRequestBody = new StringContent(postRequest, Encoding.UTF8, "application/json");
+
+            // when
+            await client.PostAsync("company", requestBody);
+            await client.PostAsync("company/1", postRequestBody);
+            var getResponse = await client.GetAsync("company/1");
+            getResponse.EnsureSuccessStatusCode();
+            var responseString = await getResponse.Content.ReadAsStringAsync();
+            Company actualCompany = JsonConvert.DeserializeObject<Company>(responseString);
+
+            // then
+            Assert.Single(actualCompany.Employees);
+            Assert.Equal(10000, actualCompany.Employees[0].Salary);
         }
     }
 }

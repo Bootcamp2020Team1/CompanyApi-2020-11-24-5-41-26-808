@@ -38,6 +38,13 @@ namespace CompanyApi.Controllers
             return companies.FirstOrDefault(company => company.CompanyId == id);
         }
 
+        [HttpPost("{id}")]
+        public Company AddEmployeeToCompany(int id, Employee employee)
+        {
+            companies.FirstOrDefault(company => company.CompanyId == id).AddEmployee(employee);
+            return companies.FirstOrDefault(company => company.CompanyId == id);
+        }
+
         [HttpPost]
         public Company AddCompany(Company company)
         {
