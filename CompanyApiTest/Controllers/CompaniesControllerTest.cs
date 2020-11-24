@@ -28,7 +28,7 @@ namespace CompanyApiTest.Controllers
         [Fact]
         public async Task Should_return_added_company_when_add_company_successful()
         {
-            var company = new Company("1", "Sun");
+            var company = new Company("Sun");
             string request = JsonConvert.SerializeObject(company);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
 
@@ -40,18 +40,6 @@ namespace CompanyApiTest.Controllers
             var responseString = await response.Content.ReadAsStringAsync();
             Company actual = JsonConvert.DeserializeObject<Company>(responseString);
             Assert.Equal(company, actual);
-            //// when
-            //await client.DeleteAsync("/Companies/clear");
-            //var company = new Company("1", "Sun");
-            //var request = JsonConvert.SerializeObject(company);
-            //StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
-            //var response = await client.PostAsync("/Companies", requestBody);
-            //response.EnsureSuccessStatusCode();
-            //var responseString = await response.Content.ReadAsStringAsync();
-
-            //// then
-            //Company actual = JsonConvert.DeserializeObject<Company>(responseString);
-            //Assert.Equal(company, actual);
         }
     }
 }

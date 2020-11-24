@@ -13,10 +13,9 @@ namespace CompanyApi.Models
         {
         }
 
-        public Company(string id, string name)
+        public Company(string name)
         {
-            //this.id = Guid.NewGuid().ToString();
-            this.Id = id;
+            this.Id = Guid.NewGuid().ToString();
             this.Name = name;
         }
 
