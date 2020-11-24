@@ -9,7 +9,7 @@ namespace CompanyApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class HelloController : ControllerBase
+    public class CompaniesController : ControllerBase
     {
         [HttpGet]
         public string Get()
