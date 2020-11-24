@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Threading.Tasks;
 using CompanyApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,16 @@ namespace CompanyApi.Controllers
         private static readonly IList<Company> companies = new List<Company>();
 
         [HttpGet]
-        public string Get()
+        public async Task<ActionResult<List<Company>>> Get()
         {
-            return "Hello World";
+            return Ok(companies);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Company>> AddCompany(Company company)
+        {
+            companies.Add(company);
+            return Ok(company);
         }
     }
 }

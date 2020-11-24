@@ -23,20 +23,21 @@ namespace CompanyApiTest.Controllers
         }
 
         [Fact]
-        public async Task Should_return_hello_world_with_default_request()
+        public async Task Should_add_new_company()
         {
             // given
-            Company company = new Company(name: "Baymax");
+            Company company = new Company(name: "Apple");
             string request = JsonConvert.SerializeObject(company);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
 
             // when
-            var response = await client.GetAsync("companies");
+            var response = await client.PostAsync("companies", requestBody);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
+            Company actualCompany = JsonConvert.DeserializeObject<Company>(responseString);
 
             // then
-            Assert.Equal("Hello World", responseString);
+            Assert.Equal(company, actualCompany);
         }
     }
 }
