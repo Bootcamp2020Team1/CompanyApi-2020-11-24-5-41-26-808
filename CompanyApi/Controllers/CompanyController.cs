@@ -46,6 +46,18 @@ namespace CompanyApi.Controllers
             return Ok(company);
         }
 
+        [HttpGet("{companyName}/employees")]
+        public async Task<ActionResult<Employee>> GetAllEmployees(string companyName)
+        {
+            var company = companies.FirstOrDefault(c => c.Name == companyName);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(company.Employees);
+        }
+
         [HttpPost("{companyName}/employees")]
         public async Task<ActionResult<Employee>> AddEmployee(string companyName, EmployeeUpdateModel employeeUpdateModel)
         {
