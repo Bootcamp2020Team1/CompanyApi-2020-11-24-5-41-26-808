@@ -85,5 +85,11 @@ namespace CompanyApi.Controllers
             GetEmployeesByCompanyId(companyId).Remove(GetEmployeesByCompanyId(companyId)
                 .FirstOrDefault(employee => employee.EmployeeID == employeeId));
         }
+
+        [HttpDelete("{companyId}")]
+        public void DeleteCompany(int companyId)
+        {
+            companies.Remove(companies.FirstOrDefault(company => company.CompanyId == companyId));
+        }
     }
 }

@@ -209,5 +209,34 @@ namespace CompanyApiTest.Controllers
             // then
             Assert.Single(actualEmployees);
         }
+
+        [Fact]
+        public async Task Should_Remove_Company_When_Delete_Company()
+        {
+            // given
+            Company company1 = new Company("testCompany1");
+            Company company2 = new Company("testCompany2");
+            string request1 = JsonConvert.SerializeObject(company1);
+            string request2 = JsonConvert.SerializeObject(company2);
+            var employee = new Employee("employeename", 10000);
+            string postRequest = JsonConvert.SerializeObject(employee);
+            StringContent requestBody1 = new StringContent(request1, Encoding.UTF8, "application/json");
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+
+            StringContent postRequestBody = new StringContent(postRequest, Encoding.UTF8, "application/json");
+
+            // when
+            await client.PostAsync("company", requestBody1);
+            await client.PostAsync("company", requestBody2);
+            await client.PostAsync("company/1", postRequestBody);
+            await client.DeleteAsync("company/2");
+            var getResponse = await client.GetAsync("company/companies");
+            getResponse.EnsureSuccessStatusCode();
+            var responseString = await getResponse.Content.ReadAsStringAsync();
+            List<Company> actualCompanys = JsonConvert.DeserializeObject<List<Company>>(responseString);
+
+            // then
+            Assert.Single(actualCompanys);
+        }
     }
 }
