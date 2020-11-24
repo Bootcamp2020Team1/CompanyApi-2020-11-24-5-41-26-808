@@ -9,6 +9,8 @@ using CompanyApi.Model;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net;
+using System.Collections.Generic;
+using CompanyApi.Controllers;
 
 namespace CompanyApiTest
 {
@@ -27,10 +29,10 @@ namespace CompanyApiTest
             return new StringContent(request, Encoding.UTF8, "application/json");
         }
 
-        public async Task<Company> DeserializeResponseToCompanyAsync(HttpResponseMessage response)
+        public async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage response)
         {
             var responseString = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Company>(responseString);
+            return JsonConvert.DeserializeObject<T>(responseString);
         }
 
         [Fact]
@@ -46,9 +48,7 @@ namespace CompanyApiTest
 
             // then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-            var responseString = await response.Content.ReadAsStringAsync();
-            var actualCompany = JsonConvert.DeserializeObject<Company>(responseString);
+            var actualCompany = await DeserializeResponseAsync<Company>(response);
             Assert.Equal(response.Headers.Location.ToString(), $"{uri}/{actualCompany.CompanyID}");
             Assert.Equal(company.Name, actualCompany.Name);
         }
@@ -66,6 +66,25 @@ namespace CompanyApiTest
 
             // then
             Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Should_Return_All_Company_List_When_Get()
+        {
+            //given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = SerializeCompany(company);
+            var uri = "/Companies";
+            await client.PostAsync(uri, requestBody);
+
+            // when
+            var response = await client.GetAsync(uri);
+
+            // then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var actualCompany = await DeserializeResponseAsync<IList<Company>>(response);
+            Assert.Equal(FakeDatabase.Companies, actualCompany);
         }
     }
 }
