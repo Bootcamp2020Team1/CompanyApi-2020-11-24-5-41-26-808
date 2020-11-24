@@ -8,7 +8,7 @@ using Xunit;
 
 namespace CompanyApiTest.Controllers
 {
-    public class HelloControllerTest
+    public class CompanyControllerTest
     {
         [Fact]
         public async Task Should_return_hello_world_with_default_request()
