@@ -16,6 +16,16 @@ namespace CompanyApi.Controllers
         {
             Companies.Clear();
         }
+
+        public static bool ContainsCompanyName(Company company)
+        {
+            return Companies.FirstOrDefault(companyInMemory => companyInMemory.Name == company.Name) != null;
+        }
+
+        public static Company GetCompanyByID(string id)
+        {
+            return Companies.FirstOrDefault(companyInMemory => companyInMemory.CompanyID == id);
+        }
     }
 
     [ApiController]
@@ -25,14 +35,14 @@ namespace CompanyApi.Controllers
         [HttpPost]
         public ActionResult<Company> AddNewCompany(Company company)
         {
-            if (FakeDatabase.Companies.FirstOrDefault(companyInMemory => companyInMemory.Name == company.Name) != null)
+            if (FakeDatabase.ContainsCompanyName(company))
             {
                 return Conflict();
             }
 
             company.CompanyID = Guid.NewGuid().ToString();
             FakeDatabase.Companies.Add(company);
-  
+
             var response = new ObjectResult(company)
             {
                 StatusCode = (int)HttpStatusCode.OK,
@@ -45,11 +55,20 @@ namespace CompanyApi.Controllers
         [HttpGet]
         public ActionResult<Company> GetAllCompanies()
         {
-            var response = new ObjectResult(FakeDatabase.Companies)
+            return Ok(FakeDatabase.Companies);
+        }
+
+        [HttpGet("{companyID}")]
+        public ActionResult<Company> GetAllCompanies(string companyID)
+        {
+            var company = FakeDatabase.GetCompanyByID(companyID);
+
+            if (company == null)
             {
-                StatusCode = (int)HttpStatusCode.OK,
-            };
-            return response;
+                return NotFound();
+            }
+
+            return Ok(company);
         }
     }
 }

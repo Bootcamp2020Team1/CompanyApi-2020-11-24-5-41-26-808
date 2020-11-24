@@ -86,5 +86,43 @@ namespace CompanyApiTest
             var actualCompany = await DeserializeResponseAsync<IList<Company>>(response);
             Assert.Equal(FakeDatabase.Companies, actualCompany);
         }
+
+        [Fact]
+        public async Task Should_Return_Ok_And_Company_Given_Existed_Company_Id_When_Get_By_ID()
+        {
+            //given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = SerializeCompany(company);
+            var uri = "/Companies";
+            var postResponse = await client.PostAsync(uri, requestBody);
+            var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
+
+            // when
+            var response = await client.GetAsync($"/Companies/{existedCompany.CompanyID}");
+
+            // then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var actualCompany = await DeserializeResponseAsync<Company>(response);
+            Assert.Equal(existedCompany, actualCompany);
+        }
+
+        [Fact]
+        public async Task Should_Return_Not_Found_Given_Not_Existed_Company_Id_When_Get_By_ID()
+        {
+            //given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = SerializeCompany(company);
+            var uri = "/Companies";
+            var postResponse = await client.PostAsync(uri, requestBody);
+            await DeserializeResponseAsync<Company>(postResponse);
+
+            // when
+            var response = await client.GetAsync($"/Companies/notExistedID");
+
+            // then
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
     }
 }
