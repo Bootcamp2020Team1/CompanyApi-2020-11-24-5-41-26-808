@@ -50,6 +50,14 @@ namespace CompanyApi.Controllers
             return companies.FirstOrDefault(company => company.CompanyId == id);
         }
 
+        [HttpPatch("{companyId}/employees/{employeeId}")]
+        public Employee UpdateEmployeeInfo(int companyId, int employeeId, EmployeeUpdateModel employeeUpdateModel)
+        {
+            GetEmployeeByEmployeeId(companyId, employeeId).Salary = employeeUpdateModel.Salary;
+            GetEmployeeByEmployeeId(companyId, employeeId).Name = employeeUpdateModel.Name;
+            return GetEmployeeByEmployeeId(companyId, employeeId);
+        }
+
         [HttpPost("{id}")]
         public Company AddEmployeeToCompany(int id, Employee employee)
         {
