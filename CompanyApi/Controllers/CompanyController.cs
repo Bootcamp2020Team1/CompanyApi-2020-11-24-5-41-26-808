@@ -22,10 +22,6 @@ namespace CompanyApi.Controllers
                 (pageSize == null || (pageIndex == null ||
                 (companies.IndexOf(c) >= pageSize * (pageIndex - 1) &&
                 companies.IndexOf(c) < pageSize * pageIndex))));
-            if (companyList.Count() == 0)
-            {
-                return NotFound();
-            }
 
             return Ok(companyList);
         }
