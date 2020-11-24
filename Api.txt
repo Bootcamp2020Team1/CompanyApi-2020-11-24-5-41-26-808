@@ -87,7 +87,7 @@ Respond Body :
 AC6: As a user, I can add an employee to a specific company
 
 Method : POST
-URI    : /Companies/{companyID}/Employee
+URI    : /Companies/{companyID}/Employees
 Request Body:
             { 
                "employeeID" : "1",
@@ -106,7 +106,7 @@ AC7: As a user, I can obtain list of all employee under a specific company
 
 
 Method : GET
-URI    : /Companies/{companyID}/Emplyee
+URI    : /Companies/{companyID}/Emplyees
 Request Body : 
              {
               "pageSizeX" : xxx,
@@ -131,7 +131,7 @@ Respond Body :
 AC8: As a user, I can update basic information of a specific employee under a specific company
 
 Method : PATCH
-URI    : /Companies/{companyID}/Emplyee/{employeeID}
+URI    : /Companies/{companyID}/Emplyees/{employeeID}
 Request Body : 
             { 
                "name" : "Jane",
@@ -149,7 +149,7 @@ Respond Body :
 AC9: As a user, I can delete a specific employee under a specific company.
 
 Method : DELETE
-URI    : /Companies/{companyID}/Emplyee/{employeeID}
+URI    : /Companies/{companyID}/Emplyees/{employeeID}
 Request Body : NULL   
 Respond Code : 200
 Respond Body : 
