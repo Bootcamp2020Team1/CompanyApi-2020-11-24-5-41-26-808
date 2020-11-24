@@ -134,21 +134,25 @@ namespace CompanyApiTest.Controllers
             // given
             Company company = new Company("testCompany");
             string request = JsonConvert.SerializeObject(company);
-            var employee = new Employee("employeename", 10000);
-            string postRequest = JsonConvert.SerializeObject(employee);
+            var employee1 = new Employee("employeename1", 10000);
+            var employee2 = new Employee("employeename2", 20000);
+            string postRequest1 = JsonConvert.SerializeObject(employee1);
+            string postRequest2 = JsonConvert.SerializeObject(employee2);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
-            StringContent postRequestBody = new StringContent(postRequest, Encoding.UTF8, "application/json");
+            StringContent postRequestBody1 = new StringContent(postRequest1, Encoding.UTF8, "application/json");
+            StringContent postRequestBody2 = new StringContent(postRequest2, Encoding.UTF8, "application/json");
 
             // when
             await client.PostAsync("company", requestBody);
-            await client.PostAsync("company/1", postRequestBody);
-            var getResponse = await client.GetAsync("company/1/employees");
+            await client.PostAsync("company/1", postRequestBody1);
+            await client.PostAsync("company/1", postRequestBody2);
+            var getResponse = await client.GetAsync("company/1/employees/2");
             getResponse.EnsureSuccessStatusCode();
             var responseString = await getResponse.Content.ReadAsStringAsync();
-            List<Employee> actualEmployees = JsonConvert.DeserializeObject<List<Employee>>(responseString);
+            Employee actualEmployee = JsonConvert.DeserializeObject<Employee>(responseString);
 
             // then
-            Assert.Equal(10000, actualEmployees[0].Salary);
+            Assert.Equal(20000, actualEmployee.Salary);
         }
     }
 }
