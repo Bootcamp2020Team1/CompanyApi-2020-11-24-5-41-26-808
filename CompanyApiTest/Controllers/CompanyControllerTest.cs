@@ -217,5 +217,30 @@ namespace CompanyApiTest.Controllers
             // then
             Assert.Equal(new Employee(name: "Jobs", salary: 200), actualEmployees);
         }
+
+        [Fact]
+        public async Task Should_delete_employee()
+        {
+            // given
+            CompanyUpdateModel companyUpdateModel = new CompanyUpdateModel(name: "Apple");
+            string request = JsonConvert.SerializeObject(companyUpdateModel);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            await client.PostAsync("companies", requestBody);
+
+            EmployeeUpdateModel employeeUpdateModel = new EmployeeUpdateModel(name: "Steve", salary: 100);
+            string request2 = JsonConvert.SerializeObject(employeeUpdateModel);
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+            await client.PostAsync("companies/Apple/employees", requestBody2);
+
+            // when
+            await client.DeleteAsync("companies/Apple/employees/Steve");
+            var response = await client.GetAsync("companies/Apple/employees");
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<Employee> actualEmployees = JsonConvert.DeserializeObject<List<Employee>>(responseString);
+
+            // then
+            Assert.Equal(new List<Employee>(), actualEmployees);
+        }
     }
 }

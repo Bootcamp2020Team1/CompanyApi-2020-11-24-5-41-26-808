@@ -78,6 +78,25 @@ namespace CompanyApi.Controllers
             return Ok(employee);
         }
 
+        [HttpDelete("{companyName}/employees/{employeeName}")]
+        public async Task<ActionResult> DeleteEmployee(string companyName, string employeeName)
+        {
+            var company = companies.FirstOrDefault(c => c.Name == companyName);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            var employee = company.Employees.FirstOrDefault(employee => employee.Name == employeeName);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            company.Employees.Remove(employee);
+            return NoContent();
+        }
+
         [HttpPost("{companyName}/employees")]
         public async Task<ActionResult<Employee>> AddEmployee(string companyName, EmployeeUpdateModel employeeUpdateModel)
         {
