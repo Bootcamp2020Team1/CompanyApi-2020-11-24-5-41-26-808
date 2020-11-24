@@ -38,6 +38,14 @@ namespace CompanyApi.Controllers
             return Ok(company);
         }
 
+        [HttpPatch("{name}")]
+        public async Task<ActionResult<Company>> UpdatePet(string name, CompanyUpdateModel companyUpdateModel)
+        {
+            var company = companies.Where(c => c.Name == name).FirstOrDefault();
+            company.Name = companyUpdateModel.Name;
+            return Ok(company);
+        }
+
         [HttpDelete("Clear")]
         public void Clear()
         {

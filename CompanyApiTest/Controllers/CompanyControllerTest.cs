@@ -117,5 +117,33 @@ namespace CompanyApiTest.Controllers
             // then
             Assert.Equal(new List<Company> { new Company(name: "Orange") }, actualCompany2);
         }
+
+        [Fact]
+        public async Task Should_change_company_name()
+        {
+            // given
+            CompanyUpdateModel companyUpdateModel = new CompanyUpdateModel(name: "Apple");
+            string request = JsonConvert.SerializeObject(companyUpdateModel);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            await client.PostAsync("companies", requestBody);
+
+            var getResponse = await client.GetAsync("companies/Apple");
+            getResponse.EnsureSuccessStatusCode();
+            var responseString = await getResponse.Content.ReadAsStringAsync();
+            Company expectedCompany = JsonConvert.DeserializeObject<Company>(responseString);
+
+            // when
+            CompanyUpdateModel companyUpdateModel2 = new CompanyUpdateModel(name: "Banana");
+            string request2 = JsonConvert.SerializeObject(companyUpdateModel2);
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+            var patchResponse = await client.PatchAsync("companies/Apple", requestBody2);
+            patchResponse.EnsureSuccessStatusCode();
+            var responseString2 = await patchResponse.Content.ReadAsStringAsync();
+            Company actualCompany = JsonConvert.DeserializeObject<Company>(responseString2);
+
+            // then
+            Assert.Equal(new Company(name: "Banana"), actualCompany);
+            Assert.Equal(expectedCompany.Id, actualCompany.Id);
+        }
     }
 }
