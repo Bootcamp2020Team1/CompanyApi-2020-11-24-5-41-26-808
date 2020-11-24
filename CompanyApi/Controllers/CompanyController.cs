@@ -14,17 +14,20 @@ namespace CompanyApi.Controllers
     public class CompanyController : ControllerBase
     {
         private static readonly IList<Company> companies = new List<Company>();
-
+        
         [HttpGet]
-        public async Task<ActionResult<List<Company>>> Get()
+        public async Task<ActionResult<IEnumerable<Company>>> Query(int? pageSize, int? pageIndex)
         {
-            return Ok(companies);
+            return Ok(companies.Where(c =>
+                (pageSize == null || (pageIndex == null || 
+                (companies.IndexOf(c) >= pageSize * (pageIndex - 1) &&
+                companies.IndexOf(c) < pageSize * pageIndex)))));
         }
 
         [HttpGet("{name}")]
-        public Company GetByName(string name)
+        public async Task<ActionResult<Company>> GetByName(string name)
         {
-            return companies.Where(c => c.Name == name).FirstOrDefault();
+            return Ok(companies.Where(c => c.Name == name).FirstOrDefault());
         }
 
         [HttpPost]
