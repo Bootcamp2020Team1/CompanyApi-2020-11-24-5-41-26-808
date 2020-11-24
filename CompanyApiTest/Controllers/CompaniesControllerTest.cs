@@ -65,5 +65,30 @@ namespace CompanyApiTest.Controllers
             List<Company> actual = JsonConvert.DeserializeObject<List<Company>>(responseString);
             Assert.Equal(new List<Company> { company1, company2 }, actual);
         }
+
+        [Fact]
+        public async Task Should_return_company_when_get_company_by_id()
+        {
+            await client.DeleteAsync("Companies/clear");
+            var company1 = new Company("Sun");
+            var company2 = new Company("Moon");
+            string request1 = JsonConvert.SerializeObject(company1);
+            string request2 = JsonConvert.SerializeObject(company2);
+            StringContent requestBody1 = new StringContent(request1, Encoding.UTF8, "application/json");
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+
+            //when
+            var responseWithId = await client.PostAsync("/Companies", requestBody1);
+            responseWithId.EnsureSuccessStatusCode();
+            var responseStringWithId = await responseWithId.Content.ReadAsStringAsync();
+            Company actualWithId = JsonConvert.DeserializeObject<Company>(responseStringWithId);
+            var id = actualWithId.Id;
+            var response = await client.GetAsync($"/Companies/{id}");
+            //then
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Company actual = JsonConvert.DeserializeObject<Company>(responseString);
+            Assert.Equal(company1, actual);
+        }
     }
 }

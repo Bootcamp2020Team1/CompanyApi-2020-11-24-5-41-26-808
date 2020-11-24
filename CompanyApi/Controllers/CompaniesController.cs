@@ -26,6 +26,12 @@ namespace CompanyApi.Controllers
             return companies;
         }
 
+        [HttpGet("{id}")]
+        public Company GetCompanById(string id)
+        {
+            return companies.First(company => company.Id == id);
+        }
+
         [HttpPost]
         public Company AddCompany(Company newCompany)
         {
