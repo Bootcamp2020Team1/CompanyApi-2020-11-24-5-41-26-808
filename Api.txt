@@ -1,0 +1,14 @@
+AC1: 
+HTTP Method: Post
+URI:/Companies
+Request Body:
+{
+'name':""
+}
+Response Code:203
+Response Body:
+Header: "Location": /Companies/{companyID}
+{
+'companyID':""
+'name':""
+}
