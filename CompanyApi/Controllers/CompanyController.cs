@@ -18,21 +18,38 @@ namespace CompanyApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Company>>> QueryCompany(int? pageSize, int? pageIndex)
         {
-            return Ok(companies.Where(c =>
-                (pageSize == null || (pageIndex == null || 
+            var companyList = companies.Where(c =>
+                (pageSize == null || (pageIndex == null ||
                 (companies.IndexOf(c) >= pageSize * (pageIndex - 1) &&
-                companies.IndexOf(c) < pageSize * pageIndex)))));
+                companies.IndexOf(c) < pageSize * pageIndex))));
+            if (companyList.Count() == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(companyList);
         }
 
         [HttpGet("{companyName}")]
         public async Task<ActionResult<Company>> GetCompanyByName(string companyName)
         {
-            return Ok(companies.Where(c => c.Name == companyName).FirstOrDefault());
+            var company = companies.FirstOrDefault(c => c.Name == companyName);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(company);
         }
 
         [HttpPost]
         public async Task<ActionResult<Company>> AddCompany(CompanyUpdateModel companyUpdateModel)
         {
+            if (companies.Where(c => c.Name == companyUpdateModel.Name).Count() > 0)
+            {
+                return Conflict();
+            }
+
             var company = new Company(companyUpdateModel.Name);
             companies.Add(company);
             return Ok(company);
@@ -41,7 +58,12 @@ namespace CompanyApi.Controllers
         [HttpPatch("{companyName}")]
         public async Task<ActionResult<Company>> UpdateCompany(string companyName, CompanyUpdateModel companyUpdateModel)
         {
-            var company = companies.Where(c => c.Name == companyName).FirstOrDefault();
+            var company = companies.FirstOrDefault(c => c.Name == companyName);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
             company.Name = companyUpdateModel.Name;
             return Ok(company);
         }
@@ -49,7 +71,13 @@ namespace CompanyApi.Controllers
         [HttpDelete("{companyName}")]
         public async Task<ActionResult<Company>> DeleteCompany(string companyName)
         {
-            companies.Remove(companies.Where(c => c.Name == companyName).FirstOrDefault());
+            var company = companies.FirstOrDefault(c => c.Name == companyName);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            companies.Remove(company);
             return NoContent();
         }
 
@@ -108,6 +136,11 @@ namespace CompanyApi.Controllers
         public async Task<ActionResult<Employee>> AddEmployee(string companyName, EmployeeUpdateModel employeeUpdateModel)
         {
             var company = companies.FirstOrDefault(c => c.Name == companyName);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
             var employee = new Employee(employeeUpdateModel.Name, employeeUpdateModel.Salary);
             company.Employees.Add(employee);
             return Ok(employee);
