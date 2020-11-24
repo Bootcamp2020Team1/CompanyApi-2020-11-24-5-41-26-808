@@ -72,5 +72,25 @@ namespace CompanyApi.Controllers
             employee.Salary = employeeUpdatedModel.Salary == null ? employee.Salary : employeeUpdatedModel.Salary.Value;
             return Ok(employee);
         }
+
+        [HttpDelete("{employeeID}")]
+        public ActionResult<Company> DeleteEmployee(string companyID, string employeeID)
+        {
+            var company = FakeDatabase.GetCompanyByID(companyID);
+
+            if (company == null || company.Employees == null)
+            {
+                return NotFound();
+            }
+
+            var employee = company.Employees.FirstOrDefault(employee => employee.EmployeeID == employeeID);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var a = company.Employees.Remove(employee);
+            return NoContent();
+        }
     }
 }
