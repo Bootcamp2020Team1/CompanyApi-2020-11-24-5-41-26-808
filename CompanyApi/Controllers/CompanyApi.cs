@@ -77,5 +77,20 @@ namespace CompanyApi.Controllers
 
             return Ok(company);
         }
+
+        [HttpPatch("{companyID}")]
+        public ActionResult<Company> UpdateCompanyInformation(string companyID, CompanyUpdatedModel updatedModel)
+        {
+            var company = FakeDatabase.GetCompanyByID(companyID);
+
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            company.Name = updatedModel.Name;
+
+            return Ok(company);
+        }
     }
 }

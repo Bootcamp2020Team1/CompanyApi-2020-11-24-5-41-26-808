@@ -152,5 +152,55 @@ namespace CompanyApiTest
             var actualCompany = await DeserializeResponseAsync<IList<Company>>(response);
             Assert.Equal(new List<Company>() { expectedCompany }, actualCompany);
         }
+
+        [Fact]
+        public async Task Should_Return_Updated_Company_Given_Existed_Company_Id_And_Updated_Information_When_Patch()
+        {
+            //given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = SerializeCompany(company);
+            var uri = "/Companies";
+            var postResponse = await client.PostAsync(uri, requestBody);
+            var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
+
+            var updatedCompany = new CompanyPostModel("companyUpdated");
+            var requestBodyPatch = SerializeCompany(updatedCompany);
+
+            // when
+            var response = await client.PatchAsync($"/Companies/{existedCompany.CompanyID}", requestBodyPatch);
+
+            // then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var actualCompany = await DeserializeResponseAsync<Company>(response);
+
+            var responseGet = await client.GetAsync($"/Companies/{existedCompany.CompanyID}");
+            var actualCompanyFromDatabase = await DeserializeResponseAsync<Company>(responseGet);
+
+            existedCompany.Name = "companyUpdated";
+            Assert.Equal(existedCompany, actualCompany);
+            Assert.Equal(existedCompany, actualCompanyFromDatabase);
+        }
+
+        [Fact]
+        public async Task Should_Return_Not_Found_Given_Not_Existed_Company_Id_And_Updated_Information_When_Patch()
+        {
+            //given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = SerializeCompany(company);
+            var uri = "/Companies";
+            var postResponse = await client.PostAsync(uri, requestBody);
+            var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
+
+            var updatedCompany = new CompanyPostModel("companyUpdated");
+            var requestBodyPatch = SerializeCompany(updatedCompany);
+
+            // when
+            var response = await client.PatchAsync($"/Companies/NOTFOUND", requestBodyPatch);
+
+            // then
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
     }
 }

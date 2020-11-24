@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace CompanyApi.Model
 {
-    public class CompanyPostModel
+    public class CompanyUpdatedModel
     {
-        public CompanyPostModel()
+        public CompanyUpdatedModel()
         {
         }
 
-        public CompanyPostModel(string name)
+        public CompanyUpdatedModel(string name)
         {
             Name = name;
         }
