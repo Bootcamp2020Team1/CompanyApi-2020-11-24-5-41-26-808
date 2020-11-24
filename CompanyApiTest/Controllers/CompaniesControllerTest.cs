@@ -140,15 +140,50 @@ namespace CompanyApiTest.Controllers
             Company actualWithId = JsonConvert.DeserializeObject<Company>(responseStringWithId);
             var id = actualWithId.Id;
 
-            var employee = new Employee("1", "Mike", "6000", id);
+            var employee = new Employee("1", "Mike", "6000");
             string request3 = JsonConvert.SerializeObject(employee);
             StringContent requestBody3 = new StringContent(request3, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync("/Companies/Employee", requestBody3);
+            var response = await client.PostAsync($"/Companies/{id}/Employees", requestBody3);
             //then
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             Employee actual = JsonConvert.DeserializeObject<Employee>(responseString);
             Assert.Equal(employee, actual);
+        }
+
+        [Fact]
+        public async Task Should_return_all_employees_when_get_from_company_with_certain_id()
+        {
+            await client.DeleteAsync("Companies/clear");
+            var company1 = new Company("Sun");
+            var company2 = new Company("Moon");
+            string request1 = JsonConvert.SerializeObject(company1);
+            string request2 = JsonConvert.SerializeObject(company2);
+
+            StringContent requestBody1 = new StringContent(request1, Encoding.UTF8, "application/json");
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+            //when
+            var responseWithId = await client.PostAsync("/Companies", requestBody1);
+            await client.PostAsync("/Companies", requestBody2);
+            responseWithId.EnsureSuccessStatusCode();
+            var responseStringWithId = await responseWithId.Content.ReadAsStringAsync();
+            Company actualWithId = JsonConvert.DeserializeObject<Company>(responseStringWithId);
+            var id = actualWithId.Id;
+
+            var employee1 = new Employee("1", "Mike", "6000");
+            var employee2 = new Employee("2", "Jane", "8000");
+            string employeeRequest1 = JsonConvert.SerializeObject(employee1);
+            string employeeRequest2 = JsonConvert.SerializeObject(employee2);
+            StringContent employeeRequestBody1 = new StringContent(employeeRequest1, Encoding.UTF8, "application/json");
+            StringContent employeeRequestBody2 = new StringContent(employeeRequest2, Encoding.UTF8, "application/json");
+            var employeeResponse1 = await client.PostAsync($"/Companies/{id}/Employees", employeeRequestBody1);
+            var employeeResponse2 = await client.PostAsync($"/Companies/{id}/Employees", employeeRequestBody2);
+            var employeeResponse = await client.GetAsync($"/Companies/{id}/Employees");
+            //then
+            employeeResponse.EnsureSuccessStatusCode();
+            var responseString = await employeeResponse.Content.ReadAsStringAsync();
+            List<Employee> actual = JsonConvert.DeserializeObject<List<Employee>>(responseString);
+            Assert.Equal(new List<Employee> { employee1, employee2 }, actual);
         }
     }
 }

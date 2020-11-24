@@ -40,13 +40,20 @@ namespace CompanyApi.Controllers
             return neetToUpdate;
         }
 
-        [HttpPost("Employee")]
-        public Employee AddEmployee(Employee employee)
+        [HttpPost("{id}/Employees")]
+        public Employee AddEmployee(string id, Employee employee)
         {
-            var company = companies.First(company => company.Id == employee.CompanyId);
+            var company = companies.First(company => company.Id == id);
             var employees = company.GetEmployees();
             employees.Add(employee);
             return employees.First(item => item.Id == employee.Id);
+        }
+
+        [HttpGet("{id}/Employees")]
+        public IEnumerable<Employee> GetAllEmployee(string id)
+        {
+            var company = companies.First(company => company.Id == id);          
+            return company.GetEmployees();
         }
 
         [HttpPost]
