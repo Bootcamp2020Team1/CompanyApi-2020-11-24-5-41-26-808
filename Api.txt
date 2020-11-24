@@ -1,183 +1,138 @@
 AC1: 
-HTTP Method: Post
-URI:/Companies
+Post /Companies
 Request Body:
 {
-'name':""
+  'name':""
 }
-Response Code:201
-Response Body:
+Response1: 201
 Header: "Location": /Companies/{companyID}
 {
-'companyID':""
-'name':""
+  'companyID':""
+  'name':""
 }
 
+Response2:409
 
-HTTP Method: Post
-URI:/Companies
-Request Body:
-{
-'name':""
-}
-Response Code:409
-Response Body:
+
 
 AC2
-HTTP Method: Get
-URI:/Companies
-Request Body:
-Response Code:200
-Response Body:
+Get /Companies
+
+Response:200
 [{
-'companyID':""
-'name':""
-}...]
+   'companyID':""
+   'name':""
+ }...
+]
+
+
 
 AC3
-HTTP Method: Get
-URI:/Companies/{companyID}
-Request Body:
-Response Code:200
-Response Body:
+Get /Companies/{companyID}
+
+Response1:200
 {
-'companyID':""
-'name':""
+  'companyID':""
+  'name':""
 }
 
-HTTP Method: Get
-URI:/Companies/{companyID}
-Request Body:
-Response Code:404
-Response Body:
+Response2:404
 
 
 AC4
-HTTP Method: Get
-URI:/Companies?pageSize={pageSize=}&pageIndex={pageIndex}
-Request Body:
-Response Code:200
-Response Body:
-[{'companyID':"", 'name':""}...]
+Get /Companies?pageSize={pageSize}&pageIndex={pageIndex}
+
+Response:200
+[{
+   'companyID':"", 
+   'name':""
+  }...
+]
+
+
 
 AC5
-HTTP Method: Patch
-URI:/Companies/{companyID}
-Request Body:
+Patch /Companies/{companyID}
 {
-'name':""
-}
-Response Code:200
-Response Body:
-{
-'companyID':""
-'name':""
+  'name':""
 }
 
-
-HTTP Method: Patch
-URI:/Companies/{companyID}
-Request Body:
+Response1:200
 {
-'name':""
+  'companyID':""
+  'name':""
 }
-Response Code:404
-Response Body:
+
+Response2:404 
 
 
 
 AC6
-HTTP Method: Post
-URI:/Companies/{companyID}/{Employees}
-Request Body:
+Post /Companies/{companyID}/{Employees}
 {
-'name':"",
-'salary':""
+  'name':"",
+  'salary':""
 }
-Response Code:201
-Response Body:
+
+Response1:201
 Header: "Location": /Companies/{companyID}/{Employees}/{employeeID}
-
-
-HTTP Method: Post
-URI:/Companies/{companyID}/{Employees}
-Request Body:
 {
-'name':"",
-'salary':""
+  '{employeeID}':"",
+  'name':"",
+  'salary':""
 }
-Response Code:404
-Response Body:
+
+
+Response2:404
+
+
 
 AC7
-HTTP Method: Get
-URI:/Companies/{companyID}/{Employees}
-Request Body:
-Response Code:200
-Response Body:
-[{
-'employeeID':"",
-'name':"",
-'salary':""
-}...]
+Get /Companies/{companyID}/{Employees}
+
+Response1:200
+[
+  {
+   'employeeID':"",
+   'name':"",
+   'salary':""
+  }...
+]
+
+Response2:404
 
 
-HTTP Method: Get
-URI:/Companies/{companyID}/{Employees}
-Request Body:
-Response Code:404
-Response Body:
 
 AC8
-HTTP Method: Patch
-URI:/Companies/{companyID}/{Employees}/{employeeID}
+Patch /Companies/{companyID}/{Employees}/{employeeID}
 Request Body:
 {
-'name':"",
-'salary':""
+  'name':"",
+  'salary':""
 }
-Response Code:200
-Response Body:
+Response1:200
 {
 'employeeID':"",
 'name':"",
 'salary':""
 }
 
-HTTP Method: Patch
-URI:/Companies/{companyID}/{Employees}/{employeeID}
-Request Body:
-{
-'name':"",
-'salary':""
-}
-Response Code:404
-Response Body:
+Response2:404
+
 
 
 AC9
-HTTP Method: Delete
-URI:/Companies/{companyID}/{Employees}/{employeeID}
-Request Body:
-Response Code:204
-Response Body:
+Delete /Companies/{companyID}/{Employees}/{employeeID}
 
-HTTP Method: Delete
-URI:/Companies/{companyID}/{Employees}/{employeeID}
-Request Body:
-Response Code:404
-Response Body:
+Response1:204
+
+Response2:404
+
 
 AC10
-HTTP Method: Delete
-URI:/Companies/{companyID}
-Request Body:
-Response Code:204
-Response Body:
+Delete /Companies/{companyID}
 
-HTTP Method: Delete
-URI:/Companies/{companyID}
-Request Body:
-Response Code:404
-Response Body:
+Response1:204
+
+Response2:404
 
