@@ -21,9 +21,9 @@ namespace CompanyApi.Controllers
         }
 
         [HttpGet]
-        public string Get()
+        public IEnumerable<Company> GetAllCompanies()
         {
-            return "Hello World";
+            return companies;
         }
 
         [HttpPost]

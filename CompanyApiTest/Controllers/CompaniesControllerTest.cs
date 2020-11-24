@@ -26,8 +26,9 @@ namespace CompanyApiTest.Controllers
         }
 
         [Fact]
-        public async Task Should_return_added_company_when_add_company_successful()
+        public async Task Should_return_added_company_when_add_company_successfully()
         {
+            await client.DeleteAsync("Companies/clear");
             var company = new Company("Sun");
             string request = JsonConvert.SerializeObject(company);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
@@ -40,6 +41,29 @@ namespace CompanyApiTest.Controllers
             var responseString = await response.Content.ReadAsStringAsync();
             Company actual = JsonConvert.DeserializeObject<Company>(responseString);
             Assert.Equal(company, actual);
+        }
+
+        [Fact]
+        public async Task Should_return_all_companies_when_get()
+        {
+            await client.DeleteAsync("Companies/clear");
+            var company1 = new Company("Sun");
+            var company2 = new Company("Moon");
+            string request1 = JsonConvert.SerializeObject(company1);
+            string request2 = JsonConvert.SerializeObject(company2);
+            StringContent requestBody1 = new StringContent(request1, Encoding.UTF8, "application/json");
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+
+            //when
+            await client.PostAsync("/Companies", requestBody1);
+            await client.PostAsync("/Companies", requestBody2);
+            var response = await client.GetAsync("/Companies");
+
+            //then
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<Company> actual = JsonConvert.DeserializeObject<List<Company>>(responseString);
+            Assert.Equal(new List<Company> { company1, company2 }, actual);
         }
     }
 }
