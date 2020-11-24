@@ -89,7 +89,7 @@ namespace CompanyApi.Controllers
                 return NotFound();
             }
 
-            var a = company.Employees.Remove(employee);
+            company.Employees.Remove(employee);
             return NoContent();
         }
     }

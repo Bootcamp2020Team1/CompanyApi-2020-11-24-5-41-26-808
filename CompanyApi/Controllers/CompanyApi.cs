@@ -92,5 +92,19 @@ namespace CompanyApi.Controllers
 
             return Ok(company);
         }
+
+        [HttpDelete("{companyID}")]
+        public ActionResult<Company> DeleteCompany(string companyID)
+        {
+            var company = FakeDatabase.GetCompanyByID(companyID);
+
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            FakeDatabase.Companies.Remove(company);
+            return NoContent();
+        }
     }
 }
