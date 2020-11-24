@@ -12,10 +12,23 @@ namespace CompanyApi.Controllers
     public class CompanyController : ControllerBase
     {
         private static IList<Company> companies = new List<Company>();
-        [HttpGet]
-        public IList<Company> Get()
+        [HttpGet("companies")]
+        public IList<Company> GetAllCompanies()
         {
             return companies;
+        }
+
+        [HttpGet("{id}")]
+        public Company GetCompanyById(int id)
+        {
+            return companies.FirstOrDefault(company => company.CompanyId == id);
+        }
+
+        [HttpGet]
+        public IList<Company> GetCompaniesByRange(int pagesize, int pageindex)
+        {
+            return companies.Where(company => company.CompanyId >= pagesize * pageindex &&
+                                              company.CompanyId < (pagesize + 1) * pageindex).ToList();
         }
 
         [HttpPost]
@@ -24,6 +37,12 @@ namespace CompanyApi.Controllers
             company.CompanyId = companies.Count + 1;
             companies.Add(company);
             return company;
+        }
+
+        [HttpDelete("clear")]
+        public void Clear()
+        {
+            companies.Clear();
         }
     }
 }
