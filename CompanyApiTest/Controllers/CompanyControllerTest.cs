@@ -60,5 +60,24 @@ namespace CompanyApiTest.Controllers
             // then
             Assert.Equal(new List<Company> { company }, actualCompany);
         }
+
+        [Fact]
+        public async Task Should_get_company_by_name()
+        {
+            // given
+            Company company = new Company(name: "Apple");
+            string request = JsonConvert.SerializeObject(company);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            await client.PostAsync("companies", requestBody);
+
+            // when
+            var response = await client.GetAsync("companies/Apple");
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Company actualCompany = JsonConvert.DeserializeObject<Company>(responseString);
+
+            // then
+            Assert.Equal(company, actualCompany);
+        }
     }
 }

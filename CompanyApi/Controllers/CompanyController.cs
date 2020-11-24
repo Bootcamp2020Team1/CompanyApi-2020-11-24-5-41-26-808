@@ -21,6 +21,12 @@ namespace CompanyApi.Controllers
             return Ok(companies);
         }
 
+        [HttpGet("{name}")]
+        public Company GetByName(string name)
+        {
+            return companies.Where(c => c.Name == name).FirstOrDefault();
+        }
+
         [HttpPost]
         public async Task<ActionResult<Company>> AddCompany(Company company)
         {
