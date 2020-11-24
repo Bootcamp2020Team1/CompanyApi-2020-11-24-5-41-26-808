@@ -38,5 +38,18 @@ namespace CompanyApi.Controllers
             Response.Headers.Add("Location", $"/Companies/{company.CompanyID}/Employees/{employee.EmployeeID}");
             return response;
         }
+
+        [HttpGet]
+        public ActionResult<Company> GetEmployee(string companyID)
+        {
+            var company = FakeDatabase.GetCompanyByID(companyID);
+
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(company.Employees);
+        }
     }
 }

@@ -207,6 +207,7 @@ namespace CompanyApiTest
         public async Task Should_Add_Employee_Given_Company_ID_And_Employee_When_Post()
         {
             // given
+            FakeDatabase.ClearCompanies();
             var company = new CompanyPostModel("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
@@ -230,6 +231,7 @@ namespace CompanyApiTest
         public async Task Should_Return_Not_Found_Given_Not_Existed_Company_ID_And_Employee_When_Post()
         {
             // given
+            FakeDatabase.ClearCompanies();
             var company = new CompanyPostModel("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
@@ -240,6 +242,46 @@ namespace CompanyApiTest
 
             // when
             var response = await client.PostAsync($"/Companies/notexisted/Employees", requestBodyPost);
+
+            // then
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Should_Get_All_Employee_Given_Company_ID_When_Get()
+        {
+            // given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = Serialize(company);
+            var postResponse = await client.PostAsync("/Companies", requestBody);
+            var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
+            var employee = new EmployeeUpdatedModel("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
+
+            // when
+            var response = await client.GetAsync($"/Companies/{existedCompany.CompanyID}/Employees");
+
+            // then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var actualEmployee = await DeserializeResponseAsync<IList<Employee>>(response);
+
+            Assert.Equal(FakeDatabase.GetCompanyByID(existedCompany.CompanyID).Employees, actualEmployee);
+        }
+
+        [Fact]
+        public async Task Should_Return_Not_Found_Given_Not_Existed_Company_ID_When_Get()
+        {
+            // given
+            FakeDatabase.ClearCompanies();
+            var company = new CompanyPostModel("company1");
+            var requestBody = Serialize(company);
+            var postResponse = await client.PostAsync("/Companies", requestBody);
+            await DeserializeResponseAsync<Company>(postResponse);
+
+            // when
+            var response = await client.GetAsync($"/Companies/notexisted/Employees");
 
             // then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
