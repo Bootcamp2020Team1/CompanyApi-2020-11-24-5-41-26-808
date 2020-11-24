@@ -53,8 +53,15 @@ namespace CompanyApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Company> GetAllCompanies()
+        public ActionResult<Company> GetAllCompanies([FromQuery] int? pageSize, [FromQuery] int? pageIndex)
         {
+            if (pageSize.HasValue && pageIndex.HasValue)
+            {
+                var startIndex = (pageIndex.Value - 1) * pageSize.Value;
+                var endIndex = startIndex + pageSize.Value - 1;
+                return Ok(FakeDatabase.Companies.Where((company, index) => index >= startIndex && index <= endIndex).ToList());
+            }
+
             return Ok(FakeDatabase.Companies);
         }
 

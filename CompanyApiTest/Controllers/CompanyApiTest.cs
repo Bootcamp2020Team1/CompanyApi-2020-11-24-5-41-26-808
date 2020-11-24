@@ -124,5 +124,33 @@ namespace CompanyApiTest
             // then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
+
+        [Fact]
+        public async Task Should_Return_Company_List_On_Page_Index_Given_Page_Size_And_Page_Index_When_Get()
+        {
+            //given
+            FakeDatabase.ClearCompanies();
+            var company1 = new CompanyPostModel("company1");
+            var company2 = new CompanyPostModel("company2");
+            var company3 = new CompanyPostModel("company3");
+
+            var requestBody1 = SerializeCompany(company1);
+            var requestBody2 = SerializeCompany(company2);
+            var requestBody3 = SerializeCompany(company3);
+
+            var uri = "/Companies";
+            await client.PostAsync(uri, requestBody1);
+            await client.PostAsync(uri, requestBody2);
+            var expectedResponse = await client.PostAsync(uri, requestBody3);
+            var expectedCompany = await DeserializeResponseAsync<Company>(expectedResponse);
+
+            // when
+            var response = await client.GetAsync("/Companies?pageSize=2&pageIndex=2");
+
+            // then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var actualCompany = await DeserializeResponseAsync<IList<Company>>(response);
+            Assert.Equal(new List<Company>() { expectedCompany }, actualCompany);
+        }
     }
 }
