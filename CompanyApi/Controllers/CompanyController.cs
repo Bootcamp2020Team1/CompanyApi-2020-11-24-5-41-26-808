@@ -31,6 +31,12 @@ namespace CompanyApi.Controllers
                                               company.CompanyId < (pagesize + 1) * pageindex).ToList();
         }
 
+        [HttpGet("{id}/employees")]
+        public IList<Employee> GetEmployeesByCompanyId(int id)
+        {
+            return companies.FirstOrDefault(company => company.CompanyId == id).Employees;
+        }
+
         [HttpPatch("{id}")]
         public Company UpdateCompanyName(int id, UpdateModel updateModel)
         {

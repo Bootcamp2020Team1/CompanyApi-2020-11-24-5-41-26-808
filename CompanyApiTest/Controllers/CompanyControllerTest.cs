@@ -127,5 +127,28 @@ namespace CompanyApiTest.Controllers
             Assert.Single(actualCompany.Employees);
             Assert.Equal(10000, actualCompany.Employees[0].Salary);
         }
+
+        [Fact]
+        public async Task Should_Get_Employees_By_Company_Id()
+        {
+            // given
+            Company company = new Company("testCompany");
+            string request = JsonConvert.SerializeObject(company);
+            var employee = new Employee("employeename", 10000);
+            string postRequest = JsonConvert.SerializeObject(employee);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            StringContent postRequestBody = new StringContent(postRequest, Encoding.UTF8, "application/json");
+
+            // when
+            await client.PostAsync("company", requestBody);
+            await client.PostAsync("company/1", postRequestBody);
+            var getResponse = await client.GetAsync("company/1/employees");
+            getResponse.EnsureSuccessStatusCode();
+            var responseString = await getResponse.Content.ReadAsStringAsync();
+            List<Employee> actualEmployees = JsonConvert.DeserializeObject<List<Employee>>(responseString);
+
+            // then
+            Assert.Equal(10000, actualEmployees[0].Salary);
+        }
     }
 }
