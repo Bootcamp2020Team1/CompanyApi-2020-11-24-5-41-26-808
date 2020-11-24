@@ -31,8 +31,9 @@ namespace CompanyApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Company>> AddCompany(Company company)
+        public async Task<ActionResult<Company>> AddCompany(CompanyUpdateModel companyUpdateModel)
         {
+            var company = new Company(companyUpdateModel.Name);
             companies.Add(company);
             return Ok(company);
         }

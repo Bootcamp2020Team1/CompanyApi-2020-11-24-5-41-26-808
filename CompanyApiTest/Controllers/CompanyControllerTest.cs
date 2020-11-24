@@ -28,8 +28,8 @@ namespace CompanyApiTest.Controllers
         public async Task Should_add_new_company()
         {
             // given
-            Company company = new Company(name: "Apple");
-            string request = JsonConvert.SerializeObject(company);
+            CompanyUpdateModel companyUpdateModel = new CompanyUpdateModel(name: "Apple");
+            string request = JsonConvert.SerializeObject(companyUpdateModel);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
 
             // when
@@ -39,15 +39,15 @@ namespace CompanyApiTest.Controllers
             Company actualCompany = JsonConvert.DeserializeObject<Company>(responseString);
 
             // then
-            Assert.Equal(company, actualCompany);
+            Assert.Equal(new Company(name: "Apple"), actualCompany);
         }
 
         [Fact]
         public async Task Should_get_all_company()
         {
             // given
-            Company company = new Company(name: "Apple");
-            string request = JsonConvert.SerializeObject(company);
+            CompanyUpdateModel companyUpdateModel = new CompanyUpdateModel(name: "Apple");
+            string request = JsonConvert.SerializeObject(companyUpdateModel);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
             await client.PostAsync("companies", requestBody);
 
@@ -58,15 +58,15 @@ namespace CompanyApiTest.Controllers
             List<Company> actualCompany = JsonConvert.DeserializeObject<List<Company>>(responseString);
 
             // then
-            Assert.Equal(new List<Company> { company }, actualCompany);
+            Assert.Equal(new List<Company> { new Company(name: "Apple") }, actualCompany);
         }
 
         [Fact]
         public async Task Should_get_company_by_name()
         {
             // given
-            Company company = new Company(name: "Apple");
-            string request = JsonConvert.SerializeObject(company);
+            CompanyUpdateModel companyUpdateModel = new CompanyUpdateModel(name: "Apple");
+            string request = JsonConvert.SerializeObject(companyUpdateModel);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
             await client.PostAsync("companies", requestBody);
 
@@ -77,25 +77,25 @@ namespace CompanyApiTest.Controllers
             Company actualCompany = JsonConvert.DeserializeObject<Company>(responseString);
 
             // then
-            Assert.Equal(company, actualCompany);
+            Assert.Equal(new Company(name: "Apple"), actualCompany);
         }
 
         [Fact]
         public async Task Should_query_company_by_pageSize_and_pageIndex()
         {
             // given
-            Company company = new Company(name: "Apple");
-            string request = JsonConvert.SerializeObject(company);
+            CompanyUpdateModel companyUpdateModel = new CompanyUpdateModel(name: "Apple");
+            string request = JsonConvert.SerializeObject(companyUpdateModel);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
             await client.PostAsync("companies", requestBody);
 
-            Company company2 = new Company(name: "Banana");
-            string request2 = JsonConvert.SerializeObject(company2);
+            CompanyUpdateModel companyUpdateModel2 = new CompanyUpdateModel(name: "Banana");
+            string request2 = JsonConvert.SerializeObject(companyUpdateModel2);
             StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
             await client.PostAsync("companies", requestBody2);
 
-            Company company3 = new Company(name: "Orange");
-            string request3 = JsonConvert.SerializeObject(company3);
+            CompanyUpdateModel companyUpdateModel3 = new CompanyUpdateModel(name: "Orange");
+            string request3 = JsonConvert.SerializeObject(companyUpdateModel3);
             StringContent requestBody3 = new StringContent(request3, Encoding.UTF8, "application/json");
             await client.PostAsync("companies", requestBody3);
 
@@ -106,7 +106,7 @@ namespace CompanyApiTest.Controllers
             List<Company> actualCompany = JsonConvert.DeserializeObject<List<Company>>(responseString);
 
             // then
-            Assert.Equal(new List<Company> { company2 }, actualCompany);
+            Assert.Equal(new List<Company> { new Company(name: "Banana") }, actualCompany);
 
             // when
             var response2 = await client.GetAsync("companies?pageSize=2&pageIndex=2");
@@ -115,7 +115,7 @@ namespace CompanyApiTest.Controllers
             List<Company> actualCompany2 = JsonConvert.DeserializeObject<List<Company>>(responseString2);
 
             // then
-            Assert.Equal(new List<Company> { company3 }, actualCompany2);
+            Assert.Equal(new List<Company> { new Company(name: "Orange") }, actualCompany2);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace CompanyApi.Models
             }
 
             Company company = (Company)obj;
-            return company.Name == Name && company.Id == Id;
+            return company.Name == Name;
         }
     }
 }
