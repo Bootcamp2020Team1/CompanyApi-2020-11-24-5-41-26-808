@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace CompanyApiTest.Controllers
             server = new TestServer(new WebHostBuilder()
                .UseStartup<Startup>());
             client = server.CreateClient();
+            client.DeleteAsync("companies/Clear");
         }
 
         [Fact]
@@ -38,6 +40,25 @@ namespace CompanyApiTest.Controllers
 
             // then
             Assert.Equal(company, actualCompany);
+        }
+
+        [Fact]
+        public async Task Should_get_all_company()
+        {
+            // given
+            Company company = new Company(name: "Apple");
+            string request = JsonConvert.SerializeObject(company);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            await client.PostAsync("companies", requestBody);
+
+            // when
+            var response = await client.GetAsync("companies");
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<Company> actualCompany = JsonConvert.DeserializeObject<List<Company>>(responseString);
+
+            // then
+            Assert.Equal(new List<Company> { company }, actualCompany);
         }
     }
 }

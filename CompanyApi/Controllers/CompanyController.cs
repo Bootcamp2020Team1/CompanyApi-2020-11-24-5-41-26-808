@@ -27,5 +27,11 @@ namespace CompanyApi.Controllers
             companies.Add(company);
             return Ok(company);
         }
+
+        [HttpDelete("Clear")]
+        public void Clear()
+        {
+            companies.Clear();
+        }
     }
 }
