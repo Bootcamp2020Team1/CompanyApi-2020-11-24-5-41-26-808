@@ -234,7 +234,7 @@ namespace CompanyApiTest.Controllers
 
             // when
             await client.DeleteAsync("companies/Apple/employees/Steve");
-            var response = await client.DeleteAsync("companies/Apple/employees");
+            var response = await client.GetAsync("companies/Apple/employees");
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             List<Employee> actualEmployees = JsonConvert.DeserializeObject<List<Employee>>(responseString);
@@ -258,13 +258,14 @@ namespace CompanyApiTest.Controllers
             await client.PostAsync("companies/Apple/employees", requestBody2);
 
             // when
-            var response = await client.DeleteAsync("companies/Apple");
+            await client.DeleteAsync("companies/Apple");
+            var response = await client.GetAsync("companies");
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
-            List<Employee> actualEmployees = JsonConvert.DeserializeObject<List<Employee>>(responseString);
+            List<Company> actualEmployees = JsonConvert.DeserializeObject<List<Company>>(responseString);
 
             // then
-            Assert.Equal(new List<Employee>(), actualEmployees);
+            Assert.Equal(new List<Company>(), actualEmployees);
         }
     }
 }

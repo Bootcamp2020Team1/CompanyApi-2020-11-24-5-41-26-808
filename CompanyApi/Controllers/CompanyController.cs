@@ -46,6 +46,13 @@ namespace CompanyApi.Controllers
             return Ok(company);
         }
 
+        [HttpDelete("{name}")]
+        public async Task<ActionResult<Company>> DeleteCompany(string name)
+        {
+            companies.Remove(companies.Where(c => c.Name == name).FirstOrDefault());
+            return NoContent();
+        }
+
         [HttpGet("{companyName}/employees")]
         public async Task<ActionResult<Employee>> GetAllEmployees(string companyName)
         {
