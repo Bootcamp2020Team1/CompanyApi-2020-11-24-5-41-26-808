@@ -81,5 +81,27 @@ namespace CompanyApiTest.Controllers
             // then
             Assert.Equal(2, actualCompanyList[0].CompanyId);
         }
+
+        [Fact]
+        public async Task Should_Update_Company_Name_When_Patch_By_ID()
+        {
+            // given
+            Company company = new Company("testCompany");
+            string request = JsonConvert.SerializeObject(company);
+            var updateModel = new UpdateModel("patchname");
+            string patchRequest = JsonConvert.SerializeObject(updateModel);
+            StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
+            StringContent patchRequestBody = new StringContent(patchRequest, Encoding.UTF8, "application/json");
+
+            // when
+            var response = await client.PostAsync("company", requestBody);
+            var patchResponse = await client.PatchAsync("company/1", patchRequestBody);
+            var getResponse = await client.GetAsync("company/1");
+            getResponse.EnsureSuccessStatusCode();
+            var responseString = await getResponse.Content.ReadAsStringAsync();
+            Company actualCompany = JsonConvert.DeserializeObject<Company>(responseString);
+            // then
+            Assert.Equal("patchname", actualCompany.Name);
+        }
     }
 }

@@ -31,6 +31,13 @@ namespace CompanyApi.Controllers
                                               company.CompanyId < (pagesize + 1) * pageindex).ToList();
         }
 
+        [HttpPatch("{id}")]
+        public Company UpdateCompanyName(int id, UpdateModel updateModel)
+        {
+            companies.FirstOrDefault(company => company.CompanyId == id).Name = updateModel.Name;
+            return companies.FirstOrDefault(company => company.CompanyId == id);
+        }
+
         [HttpPost]
         public Company AddCompany(Company company)
         {
