@@ -120,5 +120,35 @@ namespace CompanyApiTest.Controllers
             company1.Name = "star";
             Assert.Equal(company1, actual);
         }
+
+        [Fact]
+        public async Task Should_return_employee_when_add_eployee_to_company_with_certain_id()
+        {
+            await client.DeleteAsync("Companies/clear");
+            var company1 = new Company("Sun");
+            var company2 = new Company("Moon");
+            string request1 = JsonConvert.SerializeObject(company1);
+            string request2 = JsonConvert.SerializeObject(company2);
+
+            StringContent requestBody1 = new StringContent(request1, Encoding.UTF8, "application/json");
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+            //when
+            var responseWithId = await client.PostAsync("/Companies", requestBody1);
+            await client.PostAsync("/Companies", requestBody2);
+            responseWithId.EnsureSuccessStatusCode();
+            var responseStringWithId = await responseWithId.Content.ReadAsStringAsync();
+            Company actualWithId = JsonConvert.DeserializeObject<Company>(responseStringWithId);
+            var id = actualWithId.Id;
+
+            var employee = new Employee("1", "Mike", "6000", id);
+            string request3 = JsonConvert.SerializeObject(employee);
+            StringContent requestBody3 = new StringContent(request3, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync("/Companies/Employee", requestBody3);
+            //then
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            Employee actual = JsonConvert.DeserializeObject<Employee>(responseString);
+            Assert.Equal(employee, actual);
+        }
     }
 }

@@ -7,16 +7,27 @@ namespace CompanyApi.Models
 {
     public class Employee
     {
-        private string companyId;
-        private string id;
-        private string name;
-        private string salary;
+        public Employee()
+        {
+        }
+
         public Employee(string id, string name, string salary, string companyId)
         {
-            this.id = id;
-            this.name = name;
-            this.salary = salary;
-            this.companyId = companyId;
+            this.Id = id;
+            this.Name = name;
+            this.Salary = salary;
+            this.CompanyId = companyId;
+        }
+
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Salary { get; set; }
+        public string CompanyId { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            Employee other = (Employee)obj;
+            return Name == other.Name && Id == other.Id && Salary == other.Salary && CompanyId == other.CompanyId;
         }
     }
 }
