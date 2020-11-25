@@ -68,7 +68,23 @@ namespace CompanyApi.Controllers
         [HttpPost]
         public Company AddCompany(Company company)
         {
-            company.CompanyId = companies.Count + 1;
+            int addCompanyID = 1;
+            if (companies.Count == 0)
+            {
+            }
+
+            else
+            {
+                var companyIDs = new List<int>();
+                foreach (var companyInList in companies)
+                {
+                    companyIDs.Add(companyInList.CompanyId);
+                }
+
+                addCompanyID = companyIDs.Max() + 1;
+            }
+
+            company.CompanyId = addCompanyID;
             companies.Add(company);
             return company;
         }
