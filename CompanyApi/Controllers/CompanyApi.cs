@@ -38,7 +38,6 @@ namespace CompanyApi.Controllers
                 return Conflict();
             }
 
-            company.CompanyID = Guid.NewGuid().ToString();
             FakeDatabase.Companies.Add(company);
 
             var response = new ObjectResult(company)

@@ -18,7 +18,7 @@ namespace CompanyApi.Model
         {
         }
 
-        public string EmployeeID { get; set; }
+        public string EmployeeID { get; set; } = Guid.NewGuid().ToString();
 
         public string Name { get; set; }
         public double Salary { get; set; }

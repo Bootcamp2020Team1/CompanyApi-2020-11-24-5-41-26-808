@@ -23,7 +23,6 @@ namespace CompanyApi.Controllers
                 return NotFound();
             }
 
-            employee.EmployeeID = Guid.NewGuid().ToString();
             if (company.Employees == null)
             {
                 company.Employees = new List<Employee>();
