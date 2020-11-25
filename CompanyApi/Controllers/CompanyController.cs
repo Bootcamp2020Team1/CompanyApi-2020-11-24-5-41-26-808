@@ -69,11 +69,7 @@ namespace CompanyApi.Controllers
         public Company AddCompany(Company company)
         {
             int addCompanyID = 1;
-            if (companies.Count == 0)
-            {
-            }
-
-            else
+            if (companies.Count != 0)
             {
                 var companyIDs = new List<int>();
                 foreach (var companyInList in companies)
