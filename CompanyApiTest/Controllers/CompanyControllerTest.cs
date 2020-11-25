@@ -63,11 +63,11 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Return_Correct_Company_List_When_Get_By_Index_Range()
         {
             // given
-            Company company1 = new Company("testCompany");
+            Company company1 = new Company("testCompany1");
             string request1 = JsonConvert.SerializeObject(company1);
             StringContent requestBody1 = new StringContent(request1, Encoding.UTF8, "application/json");
 
-            Company company2 = new Company("testCompany");
+            Company company2 = new Company("testCompany2");
             string request2 = JsonConvert.SerializeObject(company2);
             StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
 
