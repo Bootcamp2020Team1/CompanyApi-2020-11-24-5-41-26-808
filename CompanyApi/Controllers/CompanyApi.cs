@@ -15,9 +15,9 @@ namespace CompanyApi.Controllers
             Companies.Clear();
         }
 
-        public static bool ContainsCompanyName(Company company)
+        public static bool ContainsCompanyName(string name)
         {
-            return Companies.FirstOrDefault(companyInMemory => companyInMemory.Name == company.Name) != null;
+            return Companies.FirstOrDefault(companyInMemory => companyInMemory.Name == name) != null;
         }
 
         public static Company GetCompanyByID(string id)
@@ -31,22 +31,17 @@ namespace CompanyApi.Controllers
     public class CompanyApi : ControllerBase
     {
         [HttpPost]
-        public ActionResult<Company> AddNewCompany(Company company)
+        public ActionResult<Company> AddNewCompany(CompanyDto company)
         {
-            if (FakeDatabase.ContainsCompanyName(company))
+            if (FakeDatabase.ContainsCompanyName(company.Name))
             {
                 return Conflict();
             }
 
-            FakeDatabase.Companies.Add(company);
+            var newCompany = new Company(company.Name);
 
-            var response = new ObjectResult(company)
-            {
-                StatusCode = (int)HttpStatusCode.OK,
-            };
-
-            Response.Headers.Add("Location", $"/Companies/{company.CompanyID}");
-            return response;
+            FakeDatabase.Companies.Add(newCompany);
+            return CreatedAtAction(nameof(GetCompanyByID), new { companyID = newCompany.CompanyID }, newCompany);
         }
 
         [HttpGet]
@@ -63,7 +58,7 @@ namespace CompanyApi.Controllers
         }
 
         [HttpGet("{companyID}")]
-        public ActionResult<Company> GetAllCompanies(string companyID)
+        public ActionResult<Company> GetCompanyByID(string companyID)
         {
             var company = FakeDatabase.GetCompanyByID(companyID);
 
@@ -76,7 +71,7 @@ namespace CompanyApi.Controllers
         }
 
         [HttpPatch("{companyID}")]
-        public ActionResult<Company> UpdateCompanyInformation(string companyID, CompanyUpdatedModel updatedModel)
+        public ActionResult<Company> UpdateCompanyInformation(string companyID, CompanyDto updatedModel)
         {
             var company = FakeDatabase.GetCompanyByID(companyID);
 

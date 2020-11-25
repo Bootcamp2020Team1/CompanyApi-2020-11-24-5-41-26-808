@@ -39,17 +39,16 @@ namespace CompanyApiTest
         public async Task Should_Add_Company_Given_Company_Name_Not_Existed_When_Post()
         {
             // given
-            var company = new CompanyUpdatedModel("company1");
-            var requestBody = Serialize<CompanyUpdatedModel>(company);
+            var company = new CompanyDto("company1");
+            var requestBody = Serialize<CompanyDto>(company);
 
             // when
             var uri = "/Companies";
             var response = await client.PostAsync(uri, requestBody);
 
             // then
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             var actualCompany = await DeserializeResponseAsync<Company>(response);
-            Assert.Equal(response.Headers.Location.ToString(), $"{uri}/{actualCompany.CompanyID}");
             Assert.Equal(company.Name, actualCompany.Name);
         }
 
@@ -57,7 +56,7 @@ namespace CompanyApiTest
         public async Task Should_Return_Conflict_Given_Company_Name_Existed_When_Post()
         {
             // given
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
 
             // when
@@ -73,7 +72,7 @@ namespace CompanyApiTest
         {
             //given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var uri = "/Companies";
             await client.PostAsync(uri, requestBody);
@@ -92,7 +91,7 @@ namespace CompanyApiTest
         {
             //given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var uri = "/Companies";
             var postResponse = await client.PostAsync(uri, requestBody);
@@ -112,7 +111,7 @@ namespace CompanyApiTest
         {
             //given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var uri = "/Companies";
             var postResponse = await client.PostAsync(uri, requestBody);
@@ -130,9 +129,9 @@ namespace CompanyApiTest
         {
             //given
             FakeDatabase.ClearCompanies();
-            var company1 = new CompanyUpdatedModel("company1");
-            var company2 = new CompanyUpdatedModel("company2");
-            var company3 = new CompanyUpdatedModel("company3");
+            var company1 = new CompanyDto("company1");
+            var company2 = new CompanyDto("company2");
+            var company3 = new CompanyDto("company3");
 
             var requestBody1 = Serialize(company1);
             var requestBody2 = Serialize(company2);
@@ -158,13 +157,13 @@ namespace CompanyApiTest
         {
             //given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var uri = "/Companies";
             var postResponse = await client.PostAsync(uri, requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var updatedCompany = new CompanyUpdatedModel("companyUpdated");
+            var updatedCompany = new CompanyDto("companyUpdated");
             var requestBodyPatch = Serialize(updatedCompany);
 
             // when
@@ -187,13 +186,13 @@ namespace CompanyApiTest
         {
             //given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var uri = "/Companies";
             var postResponse = await client.PostAsync(uri, requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var updatedCompany = new CompanyUpdatedModel("companyUpdated");
+            var updatedCompany = new CompanyDto("companyUpdated");
             var requestBodyPatch = Serialize(updatedCompany);
 
             // when
@@ -208,13 +207,13 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
             await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
 
             // when
@@ -230,13 +229,13 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
             var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
 
             // when
@@ -252,21 +251,20 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
 
             // when
             var response = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
 
             // then
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             var actualEmployee = await DeserializeResponseAsync<Employee>(response);
-            Assert.Equal(response.Headers.Location.ToString(), $"/Companies/{existedCompany.CompanyID}/Employees/{actualEmployee.EmployeeID}");
             Assert.Equal(employee.Name, actualEmployee.Name);
             Assert.Equal(employee.Salary, actualEmployee.Salary);
         }
@@ -276,13 +274,13 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
 
             // when
             var response = await client.PostAsync($"/Companies/notexisted/Employees", requestBodyPost);
@@ -296,12 +294,12 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
             await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
 
             // when
@@ -319,7 +317,7 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             await DeserializeResponseAsync<Company>(postResponse);
@@ -336,18 +334,18 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
             var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
             var expectedEmployee = await DeserializeResponseAsync<Employee>(responsePost);
 
-            var updatedEmployee = new EmployeeUpdatedModel("employeeUpdated", 5000);
-            var requestBodyPatch = Serialize<EmployeeUpdatedModel>(updatedEmployee);
+            var updatedEmployee = new EmployeeDto("employeeUpdated", 5000);
+            var requestBodyPatch = Serialize<EmployeeDto>(updatedEmployee);
 
             // when
             var responsePatch = await client.PatchAsync($"/Companies/{existedCompany.CompanyID}/Employees/{expectedEmployee.EmployeeID}", requestBodyPatch);
@@ -365,18 +363,18 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
             var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
             var expectedEmployee = await DeserializeResponseAsync<Employee>(responsePost);
 
-            var updatedEmployee = new EmployeeUpdatedModel("employeeUpdated", 5000);
-            var requestBodyPatch = Serialize<EmployeeUpdatedModel>(updatedEmployee);
+            var updatedEmployee = new EmployeeDto("employeeUpdated", 5000);
+            var requestBodyPatch = Serialize<EmployeeDto>(updatedEmployee);
 
             // when
             var responsePatch = await client.PatchAsync($"/Companies/notExisted/Employees/{expectedEmployee.EmployeeID}", requestBodyPatch);
@@ -390,18 +388,18 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
             var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
             var expectedEmployee = await DeserializeResponseAsync<Employee>(responsePost);
 
-            var updatedEmployee = new EmployeeUpdatedModel("employeeUpdated", 5000);
-            var requestBodyPatch = Serialize<EmployeeUpdatedModel>(updatedEmployee);
+            var updatedEmployee = new EmployeeDto("employeeUpdated", 5000);
+            var requestBodyPatch = Serialize<EmployeeDto>(updatedEmployee);
 
             // when
             var responsePatch = await client.PatchAsync($"/Companies/{existedCompany.CompanyID}/Employees/notexisted", requestBodyPatch);
@@ -415,13 +413,13 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
             var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
             var expectedEmployee = await DeserializeResponseAsync<Employee>(responsePost);
 
@@ -438,13 +436,13 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
             var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
             var expectedEmployee = await DeserializeResponseAsync<Employee>(responsePost);
 
@@ -460,13 +458,13 @@ namespace CompanyApiTest
         {
             // given
             FakeDatabase.ClearCompanies();
-            var company = new CompanyUpdatedModel("company1");
+            var company = new CompanyDto("company1");
             var requestBody = Serialize(company);
             var postResponse = await client.PostAsync("/Companies", requestBody);
             var existedCompany = await DeserializeResponseAsync<Company>(postResponse);
 
-            var employee = new EmployeeUpdatedModel("employee1", 1300);
-            var requestBodyPost = Serialize<EmployeeUpdatedModel>(employee);
+            var employee = new EmployeeDto("employee1", 1300);
+            var requestBodyPost = Serialize<EmployeeDto>(employee);
             var responsePost = await client.PostAsync($"/Companies/{existedCompany.CompanyID}/Employees", requestBodyPost);
 
             // when

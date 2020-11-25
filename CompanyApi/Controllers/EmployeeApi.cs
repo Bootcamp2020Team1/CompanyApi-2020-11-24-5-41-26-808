@@ -29,13 +29,9 @@ namespace CompanyApi.Controllers
             }
 
             company.Employees.Add(employee);
-            var response = new ObjectResult(employee)
-            {
-                StatusCode = (int)HttpStatusCode.OK,
-            };
 
-            Response.Headers.Add("Location", $"/Companies/{company.CompanyID}/Employees/{employee.EmployeeID}");
-            return response;
+            return CreatedAtAction(nameof(GetEmployee), new { companyID = employee.EmployeeID },
+            employee);
         }
 
         [HttpGet]
@@ -52,7 +48,7 @@ namespace CompanyApi.Controllers
         }
 
         [HttpPatch("{employeeID}")]
-        public ActionResult<Company> UpdateEmployeeInformation(string companyID, string employeeID, EmployeeUpdatedModel employeeUpdatedModel)
+        public ActionResult<Company> UpdateEmployeeInformation(string companyID, string employeeID, EmployeeDto employeeUpdatedModel)
         {
             var company = FakeDatabase.GetCompanyByID(companyID);
 

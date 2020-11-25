@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace CompanyApi.Model
 {
-    public class EmployeeUpdatedModel 
+    public class EmployeeDto 
     {
-        public EmployeeUpdatedModel(string name, double salary)
+        public EmployeeDto(string name, double salary)
         {
             Name = name;
             Salary = salary;
         }
 
-        public EmployeeUpdatedModel()
+        public EmployeeDto()
         {
         }
 

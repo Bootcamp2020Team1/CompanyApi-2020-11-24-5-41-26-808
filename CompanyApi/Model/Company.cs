@@ -7,9 +7,8 @@ namespace CompanyApi.Model
 {
     public class Company : IEquatable<Company>
     {
-        public Company(string companyID, string name)
+        public Company(string name)
         {
-            CompanyID = companyID;
             Name = name;
         }
 
