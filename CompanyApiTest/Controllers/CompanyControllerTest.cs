@@ -27,7 +27,7 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Add_Company_When_Add_Company()
         {
             // given
-            Company company = new Company("testCompany");
+            var company = new UpdateModel("testcompany");
             string request = JsonConvert.SerializeObject(company);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
 
@@ -45,7 +45,7 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Return_Company_When_Get_By_CompanyID()
         {
             // given
-            Company company = new Company("testCompany");
+            var company = new UpdateModel("testcompany");
             string request = JsonConvert.SerializeObject(company);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
 
@@ -63,17 +63,17 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Return_Correct_Company_List_When_Get_By_Index_Range()
         {
             // given
-            Company company1 = new Company("testCompany1");
+            var company1 = new UpdateModel("testcompany1");
             string request1 = JsonConvert.SerializeObject(company1);
             StringContent requestBody1 = new StringContent(request1, Encoding.UTF8, "application/json");
 
-            Company company2 = new Company("testCompany2");
+            var company2 = new UpdateModel("testcompany2");
             string request2 = JsonConvert.SerializeObject(company2);
             StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
 
             // when
-            var response1 = await client.PostAsync("company", requestBody1);
-            var response2 = await client.PostAsync("company", requestBody2);
+            await client.PostAsync("company", requestBody1);
+            await client.PostAsync("company", requestBody2);
             var getResponse = await client.GetAsync("company?pagesize=1&pageindex=2");
             getResponse.EnsureSuccessStatusCode();
             var responseString = await getResponse.Content.ReadAsStringAsync();
@@ -86,7 +86,7 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Update_Company_Name_When_Patch_By_ID()
         {
             // given
-            Company company = new Company("testCompany");
+            var company = new UpdateModel("testcompany");
             string request = JsonConvert.SerializeObject(company);
             var updateModel = new UpdateModel("patchname");
             string patchRequest = JsonConvert.SerializeObject(updateModel);
@@ -108,7 +108,7 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Add_Employee_To_Company_When_Add_()
         {
             // given
-            Company company = new Company("testCompany");
+            var company = new UpdateModel("testcompany");
             string request = JsonConvert.SerializeObject(company);
             var employee = new Employee("employeename", 10000);
             string postRequest = JsonConvert.SerializeObject(employee);
@@ -132,7 +132,7 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Get_Employees_By_Company_Id()
         {
             // given
-            Company company = new Company("testCompany");
+            var company = new UpdateModel("testcompany");
             string request = JsonConvert.SerializeObject(company);
             var employee1 = new Employee("employeename1", 10000);
             var employee2 = new Employee("employeename2", 20000);
@@ -159,7 +159,7 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Update_Employee_Info_When_Patch()
         {
             // given
-            Company company = new Company("testCompany");
+            var company = new UpdateModel("testcompany");
             string request = JsonConvert.SerializeObject(company);
             var employee1 = new Employee("employeename1", 10000);
             string postRequest1 = JsonConvert.SerializeObject(employee1);
@@ -186,7 +186,7 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Remove_Employee_When_Delete_By_Employee_Id()
         {
             // given
-            Company company = new Company("testCompany");
+            var company = new UpdateModel("testcompany");
             string request = JsonConvert.SerializeObject(company);
             var employee1 = new Employee("employeename1", 10000);
             var employee2 = new Employee("employeename2", 20000);
@@ -214,8 +214,8 @@ namespace CompanyApiTest.Controllers
         public async Task Should_Remove_Company_When_Delete_Company()
         {
             // given
-            Company company1 = new Company("testCompany1");
-            Company company2 = new Company("testCompany2");
+            var company1 = new UpdateModel("testcompany");
+            var company2 = new UpdateModel("testcompany");
             string request1 = JsonConvert.SerializeObject(company1);
             string request2 = JsonConvert.SerializeObject(company2);
             var employee = new Employee("employeename", 10000);

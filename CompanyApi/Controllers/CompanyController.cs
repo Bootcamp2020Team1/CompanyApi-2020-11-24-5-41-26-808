@@ -69,7 +69,7 @@ namespace CompanyApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Company>> AddCompany(Company company)
+        public async Task<ActionResult<Company>> AddCompany(UpdateModel company)
         {
             if (companies.Any(companyInList => companyInList.Name == company.Name))
             {
@@ -88,9 +88,10 @@ namespace CompanyApi.Controllers
                 addCompanyID = companyIDs.Max() + 1;
             }
 
-            company.CompanyId = addCompanyID;
-            companies.Add(company);
-            return Ok(company);
+            var addCompany = new Company(company.Name);
+            addCompany.CompanyId = addCompanyID;
+            companies.Add(addCompany);
+            return Ok(addCompany);
         }
 
         [HttpDelete("clear")]
