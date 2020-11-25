@@ -5,34 +5,32 @@ using System.Threading.Tasks;
 
 namespace CompanyApi.Models
 {
-    public class Employee
+    public class UpdateEmployee
     {
-        public Employee()
+        public UpdateEmployee()
         {
         }
 
-        public Employee(string id, string name, string salary)
+        public UpdateEmployee(string name, string salary)
         {
-            this.Id = id;
             this.Name = name;
             this.Salary = salary;
             //this.CompanyId = companyId;
         }
 
-        public string Id { get; set; }
         public string Name { get; set; }
         public string Salary { get; set; }
         //public string CompanyId { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Employee))
+            if (!(obj is UpdateEmployee))
             {
                 return false;
             }
 
-            Employee other = (Employee)obj;
-            return Name == other.Name && Id == other.Id && Salary == other.Salary;
+            UpdateEmployee other = (UpdateEmployee)obj;
+            return Name == other.Name && Salary == other.Salary;
         }
     }
 }
