@@ -1,0 +1,50 @@
+AC1:
+POST /companies
+{"companyName": "Apple"}
+200
+Header: Location: /companies/Apple
+
+AC2:
+GET /companies
+200
+[{"ID":"123", "companyName": "Apple"}...]
+
+AC3:
+GET /companies/{companyName}
+200
+{"ID":"123", "companyName": "Apple"}
+
+AC4:
+GET /companies?pageSize={x}&pageIndex={y}
+200
+[{"ID":"123", "companyName": "Apple"}...]
+
+AC5
+PATCH /companies/{companyName}
+{"companyName": "Banana"}
+200
+{"ID":"123", "companyName": "Banana"}
+
+AC6:
+POST /companies/{companyName}/employees
+{"employeeName": "Steve", "salary": 100}
+200
+Header: Location: /companies/Apple/employees/Steve
+
+AC7:
+GET /companies/{companyName}/employees
+200
+[{"ID":"001", "employeeName": "Steve", "salary": 100}...]
+
+AC8:
+PATCH /companies/{companyName}/employees/{employeeName}
+200
+{"ID":"001", "employeeName": "Steve", "salary": 100}
+
+AC9:
+DELETE /companies/{companyName}/employees/{employeeName}
+204
+
+AC10:
+DELETE /companies/{companyName}
+204
