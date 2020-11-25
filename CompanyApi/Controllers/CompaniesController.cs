@@ -34,9 +34,14 @@ namespace CompanyApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCompanies()
+        public IActionResult GetXCompaniesFromPageY(int? pageSize, int? pageIndex)
         {
-            return Ok(companies);
+            var companyList = companies.Where((company, index) =>
+                (pageSize == null || (pageIndex == null ||
+                (index >= pageSize * (pageIndex - 1) &&
+                index < pageSize * pageIndex))));
+
+            return Ok(companyList);
         }
 
         [HttpGet("{id}")]

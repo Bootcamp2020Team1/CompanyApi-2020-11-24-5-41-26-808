@@ -287,19 +287,48 @@ namespace CompanyApiTest.Controllers
             string employeeRequest2 = JsonConvert.SerializeObject(employee2);
             StringContent employeeRequestBody1 = new StringContent(employeeRequest1, Encoding.UTF8, "application/json");
             StringContent employeeRequestBody2 = new StringContent(employeeRequest2, Encoding.UTF8, "application/json");
-            var employeeResponse1 = await client.PostAsync($"/Companies/{id}/Employees", employeeRequestBody1);
-            var employeeResponse2 = await client.PostAsync($"/Companies/{id}/Employees", employeeRequestBody2);
+            await client.PostAsync($"/Companies/{id}/Employees", employeeRequestBody1);
+            await client.PostAsync($"/Companies/{id}/Employees", employeeRequestBody2);
             var deleteCompanyResponse = await client.DeleteAsync($"/Companies/{id}");
             var restAllEmployeeResponse = await client.GetAsync($"/Companies/{id}");
             //then
             deleteCompanyResponse.EnsureSuccessStatusCode();
-            //restAllEmployeeResponse.EnsureSuccessStatusCode();
             var responseString = await deleteCompanyResponse.Content.ReadAsStringAsync();
-           // var restResponseString = await restAllEmployeeResponse.Content.ReadAsStringAsync();
             Company actual = JsonConvert.DeserializeObject<Company>(responseString);
-            //Company restActual = JsonConvert.DeserializeObject<Company>(restResponseString);
             Assert.Equal(company1, actual);
             Assert.Equal(HttpStatusCode.NotFound, restAllEmployeeResponse.StatusCode);
+        }
+
+        [Fact]
+        public async Task Should_return_x_companies_when_get_companies_by_index_y()
+        {
+            await client.DeleteAsync("Companies/clear");
+            var company1 = new Company("Sun");
+            var company2 = new Company("Moon");
+            var company3 = new Company("Star");
+            string request1 = JsonConvert.SerializeObject(company1);
+            string request2 = JsonConvert.SerializeObject(company2);
+            string request3 = JsonConvert.SerializeObject(company3);
+
+            StringContent requestBody1 = new StringContent(request1, Encoding.UTF8, "application/json");
+            StringContent requestBody2 = new StringContent(request2, Encoding.UTF8, "application/json");
+            StringContent requestBody3 = new StringContent(request3, Encoding.UTF8, "application/json");
+            //when
+            var responseWithId = await client.PostAsync("/Companies", requestBody1);
+            var responseWithId2 = await client.PostAsync("/Companies", requestBody2);
+            var responseWithId3 = await client.PostAsync("/Companies", requestBody3);
+            await client.PostAsync("/Companies", requestBody2);
+            responseWithId.EnsureSuccessStatusCode();
+            var responseStringWithId = await responseWithId.Content.ReadAsStringAsync();
+            Company actualWithId = JsonConvert.DeserializeObject<Company>(responseStringWithId);
+            var id = actualWithId.Id;
+
+            var restAllEmployeeResponse = await client.GetAsync("/Companies?pageSize=1&pageIndex=1");
+            //then
+            restAllEmployeeResponse.EnsureSuccessStatusCode();
+            var responseString = await restAllEmployeeResponse.Content.ReadAsStringAsync();
+            List<Company> actual = JsonConvert.DeserializeObject<List<Company>>(responseString);
+            Assert.Equal(new List<Company> { company1 }, actual);
         }
     }
 }
