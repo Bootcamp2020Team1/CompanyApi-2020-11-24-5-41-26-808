@@ -62,7 +62,7 @@ namespace CompanyApi.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<ActionResult<Company>> AddEmployeeToCompany(int id, Employee employee)
+        public async Task<ActionResult<Company>> AddEmployeeToCompany(int id, EmployeeUpdateModel employee)
         {
             companies.FirstOrDefault(company => company.CompanyId == id).AddEmployee(employee);
             return Ok(companies.FirstOrDefault(company => company.CompanyId == id));

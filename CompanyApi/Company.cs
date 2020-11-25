@@ -28,10 +28,11 @@ namespace CompanyApi
             }
         }
 
-        public void AddEmployee(Employee employee)
+        public void AddEmployee(EmployeeUpdateModel employee)
         {
-            employee.EmployeeID = employees.Count + 1;
-            employees.Add(employee);
+            var addEmployee = new Employee(employee.Name, employee.Salary);
+            addEmployee.EmployeeID = employees.Count + 1;
+            employees.Add(addEmployee);
         }
     }
 }
