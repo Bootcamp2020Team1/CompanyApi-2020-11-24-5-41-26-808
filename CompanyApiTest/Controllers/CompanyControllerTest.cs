@@ -83,25 +83,25 @@ namespace CompanyApiTest.Controllers
         }
 
         [Fact]
-        public async Task Should_Update_Company_Name_When_Patch_By_ID()
+        public async Task Should_Update_Company_Name_When_Put_By_ID()
         {
             // given
             var company = new UpdateModel("testcompany");
             string request = JsonConvert.SerializeObject(company);
-            var updateModel = new UpdateModel("patchname");
-            string patchRequest = JsonConvert.SerializeObject(updateModel);
+            var updateModel = new UpdateModel("putname");
+            string putRequest = JsonConvert.SerializeObject(updateModel);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
-            StringContent patchRequestBody = new StringContent(patchRequest, Encoding.UTF8, "application/json");
+            StringContent putRequestBody = new StringContent(putRequest, Encoding.UTF8, "application/json");
 
             // when
             await client.PostAsync("company", requestBody);
-            await client.PatchAsync("company/1", patchRequestBody);
+            await client.PutAsync("company/1", putRequestBody);
             var getResponse = await client.GetAsync("company/1");
             getResponse.EnsureSuccessStatusCode();
             var responseString = await getResponse.Content.ReadAsStringAsync();
             Company actualCompany = JsonConvert.DeserializeObject<Company>(responseString);
             // then
-            Assert.Equal("patchname", actualCompany.Name);
+            Assert.Equal("putname", actualCompany.Name);
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace CompanyApiTest.Controllers
         }
 
         [Fact]
-        public async Task Should_Update_Employee_Info_When_Patch()
+        public async Task Should_Update_Employee_Info_When_Put()
         {
             // given
             var company = new UpdateModel("testcompany");
@@ -165,15 +165,15 @@ namespace CompanyApiTest.Controllers
             string postRequest1 = JsonConvert.SerializeObject(employee1);
             StringContent postRequestBody1 = new StringContent(postRequest1, Encoding.UTF8, "application/json");
 
-            var employeeUpdateModel = new EmployeeUpdateModel("employeepatchname", 5000);
-            string patchRequest = JsonConvert.SerializeObject(employeeUpdateModel);
+            var employeeUpdateModel = new EmployeeUpdateModel("employeeputname", 5000);
+            string putRequest = JsonConvert.SerializeObject(employeeUpdateModel);
             StringContent requestBody = new StringContent(request, Encoding.UTF8, "application/json");
-            StringContent patchRequestBody = new StringContent(patchRequest, Encoding.UTF8, "application/json");
+            StringContent putRequestBody = new StringContent(putRequest, Encoding.UTF8, "application/json");
 
             // when
             await client.PostAsync("company", requestBody);
             await client.PostAsync("company/1", postRequestBody1);
-            await client.PatchAsync("company/1/employees/1", patchRequestBody);
+            await client.PutAsync("company/1/employees/1", putRequestBody);
             var getResponse = await client.GetAsync("company/1/employees/1");
             getResponse.EnsureSuccessStatusCode();
             var responseString = await getResponse.Content.ReadAsStringAsync();

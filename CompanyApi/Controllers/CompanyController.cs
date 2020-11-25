@@ -44,14 +44,14 @@ namespace CompanyApi.Controllers
                 .Employees.FirstOrDefault(employee => employee.EmployeeID == employeeId));
         }
 
-        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<Company>> UpdateCompanyName(int id, UpdateModel updateModel)
         {
             companies.FirstOrDefault(company => company.CompanyId == id).Name = updateModel.Name;
             return Ok(companies.FirstOrDefault(company => company.CompanyId == id));
         }
 
-        [HttpPatch("{companyId}/employees/{employeeId}")]
+        [HttpPut("{companyId}/employees/{employeeId}")]
         public async Task<ActionResult<Employee>> UpdateEmployeeInfo(int companyId, int employeeId, EmployeeUpdateModel employeeUpdateModel)
         {
             var employee = companies.FirstOrDefault(company => company.CompanyId == companyId)
