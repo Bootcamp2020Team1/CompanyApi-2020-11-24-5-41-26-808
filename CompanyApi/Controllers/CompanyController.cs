@@ -13,61 +13,69 @@ namespace CompanyApi.Controllers
     {
         private static IList<Company> companies = new List<Company>();
         [HttpGet("companies")]
-        public IList<Company> GetAllCompanies()
+        public async Task<ActionResult<IEnumerable<Company>>> GetAllCompanies()
         {
-            return companies;
+            return Ok(companies);
         }
 
         [HttpGet("{id}")]
-        public Company GetCompanyById(int id)
+        public async Task<ActionResult<Company>> GetCompanyById(int id)
         {
-            return companies.FirstOrDefault(company => company.CompanyId == id);
+            return Ok(companies.FirstOrDefault(company => company.CompanyId == id));
         }
 
         [HttpGet]
-        public IList<Company> GetCompaniesByRange(int pagesize, int pageindex)
+        public async Task<ActionResult<IEnumerable<Company>>> GetCompaniesByRange(int pagesize, int pageindex)
         {
-            return companies.Where(company => company.CompanyId >= pagesize * pageindex &&
-                                              company.CompanyId < (pagesize + 1) * pageindex).ToList();
+            return Ok(companies.Where(company => company.CompanyId >= pagesize * pageindex &&
+                                                 company.CompanyId < (pagesize + 1) * pageindex).ToList());
         }
 
         [HttpGet("{id}/employees")]
-        public IList<Employee> GetEmployeesByCompanyId(int id)
+        public async Task<ActionResult<IEnumerable<Company>>> GetEmployeesByCompanyId(int id)
         {
-            return companies.FirstOrDefault(company => company.CompanyId == id).Employees;
+            return Ok(companies.FirstOrDefault(company => company.CompanyId == id).Employees);
         }
 
         [HttpGet("{companyId}/employees/{employeeId}")]
-        public Employee GetEmployeeByEmployeeId(int companyId, int employeeId)
+        public async Task<ActionResult<Employee>> GetEmployeeByEmployeeId(int companyId, int employeeId)
         {
-            return GetEmployeesByCompanyId(companyId).FirstOrDefault(employee => employee.EmployeeID == employeeId);
+            return Ok(companies.FirstOrDefault(company => company.CompanyId == companyId)
+                .Employees.FirstOrDefault(employee => employee.EmployeeID == employeeId));
         }
 
         [HttpPatch("{id}")]
-        public Company UpdateCompanyName(int id, UpdateModel updateModel)
+        public async Task<ActionResult<Company>> UpdateCompanyName(int id, UpdateModel updateModel)
         {
             companies.FirstOrDefault(company => company.CompanyId == id).Name = updateModel.Name;
-            return companies.FirstOrDefault(company => company.CompanyId == id);
+            return Ok(companies.FirstOrDefault(company => company.CompanyId == id));
         }
 
         [HttpPatch("{companyId}/employees/{employeeId}")]
-        public Employee UpdateEmployeeInfo(int companyId, int employeeId, EmployeeUpdateModel employeeUpdateModel)
+        public async Task<ActionResult<Employee>> UpdateEmployeeInfo(int companyId, int employeeId, EmployeeUpdateModel employeeUpdateModel)
         {
-            GetEmployeeByEmployeeId(companyId, employeeId).Salary = employeeUpdateModel.Salary;
-            GetEmployeeByEmployeeId(companyId, employeeId).Name = employeeUpdateModel.Name;
-            return GetEmployeeByEmployeeId(companyId, employeeId);
+            var employee = companies.FirstOrDefault(company => company.CompanyId == companyId)
+                .Employees.FirstOrDefault(employee => employee.EmployeeID == employeeId);
+            employee.Salary = employeeUpdateModel.Salary;
+            employee.Name = employeeUpdateModel.Name;
+            return Ok(employee);
         }
 
         [HttpPost("{id}")]
-        public Company AddEmployeeToCompany(int id, Employee employee)
+        public async Task<ActionResult<Company>> AddEmployeeToCompany(int id, Employee employee)
         {
             companies.FirstOrDefault(company => company.CompanyId == id).AddEmployee(employee);
-            return companies.FirstOrDefault(company => company.CompanyId == id);
+            return Ok(companies.FirstOrDefault(company => company.CompanyId == id));
         }
 
         [HttpPost]
-        public Company AddCompany(Company company)
+        public async Task<ActionResult<Company>> AddCompany(Company company)
         {
+            if (companies.Any(companyInList => companyInList.CompanyId == company.CompanyId))
+            {
+                return Conflict();
+            }
+
             int addCompanyID = 1;
             if (companies.Count != 0)
             {
@@ -82,26 +90,30 @@ namespace CompanyApi.Controllers
 
             company.CompanyId = addCompanyID;
             companies.Add(company);
-            return company;
+            return Ok(company);
         }
 
         [HttpDelete("clear")]
-        public void Clear()
+        public async Task<ActionResult> Clear()
         {
             companies.Clear();
+            return Ok();
         }
 
         [HttpDelete("{companyId}/employees/{employeeId}")]
-        public void DeleteEmployee(int companyId, int employeeId)
+        public async Task<ActionResult> DeleteEmployee(int companyId, int employeeId)
         {
-            GetEmployeesByCompanyId(companyId).Remove(GetEmployeesByCompanyId(companyId)
+            companies.FirstOrDefault(company => company.CompanyId == companyId).Employees
+                .Remove(companies.FirstOrDefault(company => company.CompanyId == companyId).Employees
                 .FirstOrDefault(employee => employee.EmployeeID == employeeId));
+            return Ok();
         }
 
         [HttpDelete("{companyId}")]
-        public void DeleteCompany(int companyId)
+        public async Task<ActionResult> DeleteCompany(int companyId)
         {
             companies.Remove(companies.FirstOrDefault(company => company.CompanyId == companyId));
+            return Ok();
         }
     }
 }
