@@ -27,9 +27,10 @@ namespace CompanyApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Company GetCompanById(string id)
+        public IActionResult GetCompanById(string id)
         {
-            return companies.First(company => company.Id == id);
+            Company findCompany = companies.First(company => company.Id == id);
+            return Ok(findCompany);
         }
 
         [HttpPatch("{id}")]
@@ -44,7 +45,7 @@ namespace CompanyApi.Controllers
         public Employee AddEmployee(string id, Employee employee)
         {
             var company = companies.First(company => company.Id == id);
-            var employees = company.GetEmployees();
+            var employees = company.Employees;
             employees.Add(employee);
             return employees.First(item => item.Id == employee.Id);
         }
@@ -53,14 +54,20 @@ namespace CompanyApi.Controllers
         public IEnumerable<Employee> GetAllEmployee(string id)
         {
             var company = companies.First(company => company.Id == id);          
-            return company.GetEmployees();
+            return company.Employees;
         }
 
         [HttpPost]
-        public Company AddCompany(Company newCompany)
+        public IActionResult AddCompany(Company newCompany)
         {
+            bool isExist = companies.Any(item => item.Name == newCompany.Name);
+            if (isExist) 
+            {
+                return Conflict();
+            }
+
             companies.Add(newCompany);
-            return newCompany;
+            return Ok(newCompany);
         }
     }
 }

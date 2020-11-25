@@ -7,7 +7,6 @@ namespace CompanyApi.Models
 {
     public class Company
     {
-        private List<Employee> employees = new List<Employee>();
         public Company()
         {
         }
@@ -20,13 +19,19 @@ namespace CompanyApi.Models
 
         public string Id { get; set; }
         public string Name { get; set; }
-        public List<Employee> GetEmployees()
-        {
-            return employees;
-        }
+        public List<Employee> Employees { get; set; } = new List<Employee>();
+        //public List<Employee> GetEmployees()
+        //{
+        //    return employees;
+        //}
 
         public override bool Equals(object obj)
         {
+            if (!(obj is Company))
+            {
+                return false;
+            }
+
             Company other = (Company)obj;
             return Name == other.Name && Id == other.Id;
         }
