@@ -1,0 +1,180 @@
+AC1: As a user, I can add a company if its name no same to any existing company
+
+Method : POST
+URI    : /Companies
+Request Body:
+            { 
+               "name" : "Moon"
+            }  
+Respond Code : 200
+Respond Body : 
+            { 
+               "companyID" : "123"
+               "name" : "Moon"
+            } 
+****************************************************************************
+AC2: As a user, I can obtain all company list
+
+Method : GET
+URI    : /Companies
+Request Body : NULL 
+Respond Code : 200
+Respond Body : 
+            [{ 
+               "companyID" : "123"
+               "name" : "Moon"
+            },
+            { 
+               "companyID" : "456"
+               "name" : "Moon"
+            }
+            ...
+            ] 
+
+**********************************************************************************
+AC3: As a user, I can obtain an existing company
+
+Method : GET
+URI    : /Companies/{companyID}
+Request Body : NULL 
+Respond Code : 200
+Respond Body : 
+            { 
+               "companyID" : "companyID"
+               "name" : "Moon"
+            }
+
+**********************************************************************************
+AC4: As a user, I can obtain X(page size) companies from index of Y(page index start from 1)
+
+Method : GET
+URI    : /Companies
+Request Body : 
+             {
+              "pageSizeX" : xxx,
+              "pageIndex" : xxx
+              }
+   
+Respond Code : 200
+Respond Body : 
+            [{ 
+               "companyID" : "123"
+               "name" : "Moon"
+            },
+            { 
+               "companyID" : "456"
+               "name" : "Moon"
+            }
+            ...
+            ] 
+*****************************************************************************************
+AC5: As a user, I can update basic information of an existing company
+
+Method : PATCH
+URI    : /Companies/{companyID}
+Request Body : 
+             {
+              "name" : "Sun",
+              }
+   
+Respond Code : 200
+Respond Body : 
+            { 
+               "companyID" : "companyID"
+               "name" : "Sun"
+            }
+*****************************************************************************************
+AC6: As a user, I can add an employee to a specific company
+
+Method : POST
+URI    : /Companies/{companyID}/Employees
+Request Body:
+            { 
+               "employeeID" : "1",
+               "name" : "Mike",
+               "salary" : "6000",
+            }  
+Respond Code : 200
+Respond Body : 
+            { 
+               "employeeID" : "1",
+               "name" : "Mike",
+               "salary" : "6000",
+            }
+*******************************************************************************************
+AC7: As a user, I can obtain list of all employee under a specific company
+
+
+Method : GET
+URI    : /Companies/{companyID}/Emplyees
+Request Body : 
+             {
+              "pageSizeX" : xxx,
+              "pageIndex" : xxx
+              }
+   
+Respond Code : 200
+Respond Body : 
+            [{ 
+               "employeeID" : "1",
+               "name" : "Mike",
+               "salary" : "6000",
+            }
+            { 
+               "employeeID" : "2",
+               "name" : "Jane",
+               "salary" : "7000",
+            }
+            ...
+            ] 
+**************************************************************************************************
+AC8: As a user, I can update basic information of a specific employee under a specific company
+
+Method : PATCH
+URI    : /Companies/{companyID}/Emplyees/{employeeID}
+Request Body : 
+            { 
+               "name" : "Jane",
+               "salary" : "8000",
+            }
+   
+Respond Code : 200
+Respond Body : 
+            { 
+               "employeeID" : "2",
+               "name" : "Jane",
+               "salary" : "8000",
+            }
+**************************************************************************************************
+AC9: As a user, I can delete a specific employee under a specific company.
+
+Method : DELETE
+URI    : /Companies/{companyID}/Emplyees/{employeeID}
+Request Body : NULL   
+Respond Code : 200
+Respond Body : 
+            { 
+               "employeeID" : "2",
+               "name" : "Jane",
+               "salary" : "8000",
+            }
+******************************************************************************************************
+AC10: As a user, I can delete a specific company, and all employees belong to this company should also be deleted
+
+Method : DELETE
+URI    : /Companies/{companyID}
+Request Body : NULL   
+Respond Code : 200
+Respond Body : 
+            [{ 
+               "employeeID" : "1",
+               "name" : "Mike",
+               "salary" : "6000",
+            }
+            { 
+               "employeeID" : "2",
+               "name" : "Jane",
+               "salary" : "7000",
+            }
+            ...
+            ] 
