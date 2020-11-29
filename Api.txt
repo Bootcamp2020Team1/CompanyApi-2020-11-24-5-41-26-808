@@ -1,0 +1,138 @@
+AC1: 
+Post /Companies
+Request Body:
+{
+  'name':""
+}
+Response1: 201
+Header: "Location": /Companies/{companyID}
+{
+  'companyID':""
+  'name':""
+}
+
+Response2:409
+
+
+
+AC2
+Get /Companies
+
+Response:200
+[{
+   'companyID':""
+   'name':""
+ }...
+]
+
+
+
+AC3
+Get /Companies/{companyID}
+
+Response1:200
+{
+  'companyID':""
+  'name':""
+}
+
+Response2:404
+
+
+AC4
+Get /Companies?pageSize={pageSize}&pageIndex={pageIndex}
+
+Response:200
+[{
+   'companyID':"", 
+   'name':""
+  }...
+]
+
+
+
+AC5
+Patch /Companies/{companyID}
+{
+  'name':""
+}
+
+Response1:200
+{
+  'companyID':""
+  'name':""
+}
+
+Response2:404 
+
+
+
+AC6
+Post /Companies/{companyID}/{Employees}
+{
+  'name':"",
+  'salary':""
+}
+
+Response1:201
+Header: "Location": /Companies/{companyID}/{Employees}/{employeeID}
+{
+  'employeeID':"",
+  'name':"",
+  'salary':""
+}
+
+
+Response2:404
+
+
+
+AC7
+Get /Companies/{companyID}/{Employees}
+
+Response1:200
+[
+  {
+   'employeeID':"",
+   'name':"",
+   'salary':""
+  }...
+]
+
+Response2:404
+
+
+
+AC8
+Patch /Companies/{companyID}/{Employees}/{employeeID}
+Request Body:
+{
+  'name':"",
+  'salary':""
+}
+Response1:200
+{
+  'employeeID':"",
+  'name':"",
+  'salary':""
+}
+
+Response2:404
+
+
+
+AC9
+Delete /Companies/{companyID}/{Employees}/{employeeID}
+
+Response1:204
+
+Response2:404
+
+
+AC10
+Delete /Companies/{companyID}
+
+Response1:204
+
+Response2:404
+
